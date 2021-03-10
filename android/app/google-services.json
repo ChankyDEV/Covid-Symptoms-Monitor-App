@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1017849506898",
+    "project_id": "covid-symptoms-monitor",
+    "storage_bucket": "covid-symptoms-monitor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017849506898:android:b737f3e3b2586c6ad7c38b",
+        "android_client_info": {
+          "package_name": "com.chankydev.covidmonitor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017849506898-mqdilhqojbjcgsbc3p8qbm2q9mig5kcf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA32xZ-4zi9Xs4P8ra813D6V2jFb6c_pJE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017849506898-mqdilhqojbjcgsbc3p8qbm2q9mig5kcf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
