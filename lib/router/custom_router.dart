@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:symptoms_monitor/screens/main/main_screen.dart';
-import 'package:symptoms_monitor/screens/wrapper.dart';
 
 class CustomRouter {
   //TODO: CHANGE ROUTES

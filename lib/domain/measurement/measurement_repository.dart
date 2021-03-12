@@ -29,6 +29,24 @@ class MeasurementRepository implements IMeasurementRepository {
     }
   }
 
+  @override
+  Future<Either<MeasurementFailure, List<Measurement>>> getLimited() async {
+    try {
+      var list = await _firestore
+          .collection('families')
+          .doc('OZUGLMzwLl8Y5ogZPVCy')
+          .collection('Anna')
+          .orderBy('date', descending: true)
+          .limit(5)
+          .get()
+          .then((snapshot) => _fromFirebaseQuery(snapshot));
+
+      return right(list);
+    } catch (e) {
+      return left(MeasurementFailure());
+    }
+  }
+
   List<Measurement> _fromFirebaseQuery(QuerySnapshot snapshot) {
     List<Measurement> measurements = [];
     snapshot.docs.forEach((doc) {
@@ -51,7 +69,7 @@ class MeasurementRepository implements IMeasurementRepository {
           .then((value) => unit);
 
       return right(result);
-    } on FirebaseException catch (e) {
+    } on FirebaseException catch (_) {
       return left(MeasurementFailure());
     }
   }

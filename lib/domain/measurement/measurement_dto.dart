@@ -1,13 +1,15 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
 
-class MeasurementDTO {
+class MeasurementDTO implements Equatable {
   final int heartRate;
   final double temperature;
   final int bloodSaturation;
   final String date;
+
   MeasurementDTO({
     this.heartRate,
     this.temperature,
@@ -25,20 +27,6 @@ class MeasurementDTO {
 
   factory MeasurementDTO.fromFirestore(DocumentSnapshot doc) {
     return MeasurementDTO.fromMap(doc.data());
-  }
-
-  MeasurementDTO copyWith({
-    int heartRate,
-    double temperature,
-    int bloodSaturation,
-    String date,
-  }) {
-    return MeasurementDTO(
-      heartRate: heartRate ?? this.heartRate,
-      temperature: temperature ?? this.temperature,
-      bloodSaturation: bloodSaturation ?? this.bloodSaturation,
-      date: date ?? this.date,
-    );
   }
 
   Map<String, dynamic> toMap() {
@@ -67,26 +55,8 @@ class MeasurementDTO {
       MeasurementDTO.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'MeasurementDTO(heartRate: $heartRate, temperature: $temperature, bloodSaturation: $bloodSaturation, date: $date)';
-  }
+  List<Object> get props => [heartRate, temperature, bloodSaturation, date];
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
-
-    return o is MeasurementDTO &&
-        o.heartRate == heartRate &&
-        o.temperature == temperature &&
-        o.bloodSaturation == bloodSaturation &&
-        o.date == date;
-  }
-
-  @override
-  int get hashCode {
-    return heartRate.hashCode ^
-        temperature.hashCode ^
-        bloodSaturation.hashCode ^
-        date.hashCode;
-  }
+  bool get stringify => true;
 }

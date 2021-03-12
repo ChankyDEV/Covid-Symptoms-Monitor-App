@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:symptoms_monitor/router/custom_router.dart';
-import 'package:symptoms_monitor/screens/main/main_screen.dart';
 
 class AppConfig extends StatelessWidget {
   final _customRouter = CustomRouter();

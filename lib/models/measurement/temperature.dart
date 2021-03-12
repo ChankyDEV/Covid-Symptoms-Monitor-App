@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class Temperature {
+class Temperature implements Equatable {
   final double value;
 
   Temperature({@required this.value});
@@ -24,4 +25,10 @@ class Temperature {
 
   factory Temperature.fromJson(String source) =>
       Temperature.fromMap(json.decode(source));
+
+  @override
+  List<Object> get props => [value];
+
+  @override
+  bool get stringify => true;
 }

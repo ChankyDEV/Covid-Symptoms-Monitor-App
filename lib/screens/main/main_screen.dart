@@ -36,7 +36,6 @@ class _MainScreenState extends State<MainScreen>
   @override
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
 
     void _dragStarts(DragStartDetails details) {
       bool isDragOpenFromLeft = _animationController.isDismissed &&

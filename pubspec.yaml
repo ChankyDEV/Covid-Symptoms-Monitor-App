@@ -27,6 +27,7 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   cupertino_icons: ^1.0.0
   dartz: ^0.9.2
+  equatable: ^1.2.6
   firebase: ^8.0.0
   firebase_auth: ^0.20.1
   firebase_core: ^0.7.0
@@ -34,11 +35,12 @@ dependencies:
   freezed: ^0.12.7
   get_it: ^5.0.6
   injectable: ^1.1.2
+  mockito: ^4.1.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner:
+  build_runner: null
   injectable_generator: ^1.0.7
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

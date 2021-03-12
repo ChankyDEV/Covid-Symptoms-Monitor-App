@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class HeartRate {
+class HeartRate implements Equatable {
   final int value;
 
   HeartRate({@required this.value});
@@ -24,4 +25,10 @@ class HeartRate {
 
   factory HeartRate.fromJson(String source) =>
       HeartRate.fromMap(json.decode(source));
+
+  @override
+  List<Object> get props => [value];
+
+  @override
+  bool get stringify => true;
 }

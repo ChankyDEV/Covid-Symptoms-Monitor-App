@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class BloodSaturation {
+class BloodSaturation implements Equatable {
   final int value;
 
   BloodSaturation({@required this.value});
@@ -25,4 +26,10 @@ class BloodSaturation {
 
   factory BloodSaturation.fromJson(String source) =>
       BloodSaturation.fromMap(json.decode(source));
+
+  @override
+  List<Object> get props => [value];
+
+  @override
+  bool get stringify => true;
 }
