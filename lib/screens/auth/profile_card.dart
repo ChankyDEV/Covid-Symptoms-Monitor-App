@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:symptoms_monitor/blocs/cubit/add_profile_cubit.dart';
+import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';

@@ -38,6 +38,9 @@ dependencies:
   image_picker: ^0.6.7+22
   injectable: ^1.1.2
   mockito: ^4.1.4
+  google_fonts: ^1.1.1
+  email_validator: ^1.0.6
+  flushbar: ^1.9.1
 
 dev_dependencies:
   flutter_test:

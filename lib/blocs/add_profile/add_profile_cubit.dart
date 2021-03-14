@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
-
 part 'add_profile_state.dart';
 part 'add_profile_cubit.freezed.dart';
 

@@ -8,7 +8,6 @@ class AppConfig extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: _customRouter.onGenerateRoute,
-      initialRoute: '/add_profiles',
     );
   }
 }
