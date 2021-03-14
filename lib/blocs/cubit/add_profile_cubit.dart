@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
 
@@ -9,31 +10,70 @@ part 'add_profile_cubit.freezed.dart';
 class AddProfileCubit extends Cubit<AddProfileState> {
   AddProfileCubit()
       : super(AddProfileState.initial(
-            profilesCount: 1,
-            profiles: [Profile.empty()],
+            profilesCount: 0,
+            profiles: [],
             profileName: '',
             genders: [true, false, false],
-            genderIndex: 0));
+            genderIndex: 0,
+            emptyProfile: Profile.empty()));
 
   void add() {
-    var profs = state.profiles;
-    Gender gen;
-    if (state.genderIndex == 0) {
-      gen = Gender.male;
-    } else if (state.genderIndex == 1) {
-      gen = Gender.female;
-    } else {
-      gen = Gender.none;
-    }
+    if (state.profileName.isNotEmpty) {
+      var profiles = state.profiles;
 
-    profs.insert(
-        0,
-        Profile(
-            hasImage: false,
+      Gender gender;
+      if (state.genderIndex == 0) {
+        gender = Gender.male;
+      } else if (state.genderIndex == 1) {
+        gender = Gender.female;
+      } else {
+        gender = Gender.none;
+      }
+
+      profiles.insert(
+          0,
+          Profile(
+            hasImage: true,
             imageUrl: '',
             name: state.profileName,
-            gender: gen));
+            gender: gender,
+            avatar: state.emptyProfile.avatar,
+          ));
+
+      var emptyProfile = Profile.empty();
+      emptyProfile = emptyProfile.copyWith(name: state.profileName);
+
+      emit(state.copyWith(
+        profilesCount: profiles.length,
+        profiles: profiles,
+        emptyProfile: emptyProfile,
+      ));
+    }
+  }
+
+  void remove(Profile profile) {
+    print(profile.name);
+    var profs = state.profiles;
+    profs.remove(profile);
     emit(state.copyWith(profilesCount: profs.length, profiles: profs));
+  }
+
+  Future<void> chooseImage() async {
+    //TODO: Change location of taking pictures. Move to repo
+
+    var imgPicker = ImagePicker();
+    PickedFile avatar;
+    try {
+      avatar = await imgPicker.getImage(source: ImageSource.gallery);
+    } catch (e) {}
+
+    if (avatar != null) {
+      //TODO: Send avatar to firebase
+
+      var empty = state.emptyProfile.copyWith(avatar: avatar, hasImage: true);
+
+      emit(state.copyWith(emptyProfile: empty));
+    }
   }
 
   void nameChanged(String input) {
@@ -51,12 +91,5 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     }
 
     emit(state.copyWith(genderIndex: index, genders: state.genders));
-  }
-
-  void remove(Profile profile) {
-    print(profile.name);
-    var profs = state.profiles;
-    profs.remove(profile);
-    emit(state.copyWith(profilesCount: profs.length, profiles: profs));
   }
 }

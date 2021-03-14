@@ -19,13 +19,15 @@ class _$AddProfileStateTearOff {
       List<Profile> profiles,
       String profileName,
       List<bool> genders,
-      int genderIndex}) {
+      int genderIndex,
+      Profile emptyProfile}) {
     return _Initial(
       profilesCount: profilesCount,
       profiles: profiles,
       profileName: profileName,
       genders: genders,
       genderIndex: genderIndex,
+      emptyProfile: emptyProfile,
     );
   }
 }
@@ -41,17 +43,28 @@ mixin _$AddProfileState {
   String get profileName;
   List<bool> get genders;
   int get genderIndex;
+  Profile get emptyProfile;
 
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required
-        TResult initial(int profilesCount, List<Profile> profiles,
-            String profileName, List<bool> genders, int genderIndex),
+        TResult initial(
+            int profilesCount,
+            List<Profile> profiles,
+            String profileName,
+            List<bool> genders,
+            int genderIndex,
+            Profile emptyProfile),
   });
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(int profilesCount, List<Profile> profiles,
-        String profileName, List<bool> genders, int genderIndex),
+    TResult initial(
+        int profilesCount,
+        List<Profile> profiles,
+        String profileName,
+        List<bool> genders,
+        int genderIndex,
+        Profile emptyProfile),
     @required TResult orElse(),
   });
   @optionalTypeArgs
@@ -78,7 +91,8 @@ abstract class $AddProfileStateCopyWith<$Res> {
       List<Profile> profiles,
       String profileName,
       List<bool> genders,
-      int genderIndex});
+      int genderIndex,
+      Profile emptyProfile});
 }
 
 /// @nodoc
@@ -97,6 +111,7 @@ class _$AddProfileStateCopyWithImpl<$Res>
     Object profileName = freezed,
     Object genders = freezed,
     Object genderIndex = freezed,
+    Object emptyProfile = freezed,
   }) {
     return _then(_value.copyWith(
       profilesCount: profilesCount == freezed
@@ -109,6 +124,9 @@ class _$AddProfileStateCopyWithImpl<$Res>
       genders: genders == freezed ? _value.genders : genders as List<bool>,
       genderIndex:
           genderIndex == freezed ? _value.genderIndex : genderIndex as int,
+      emptyProfile: emptyProfile == freezed
+          ? _value.emptyProfile
+          : emptyProfile as Profile,
     ));
   }
 }
@@ -124,7 +142,8 @@ abstract class _$InitialCopyWith<$Res>
       List<Profile> profiles,
       String profileName,
       List<bool> genders,
-      int genderIndex});
+      int genderIndex,
+      Profile emptyProfile});
 }
 
 /// @nodoc
@@ -143,6 +162,7 @@ class __$InitialCopyWithImpl<$Res> extends _$AddProfileStateCopyWithImpl<$Res>
     Object profileName = freezed,
     Object genders = freezed,
     Object genderIndex = freezed,
+    Object emptyProfile = freezed,
   }) {
     return _then(_Initial(
       profilesCount: profilesCount == freezed
@@ -155,6 +175,9 @@ class __$InitialCopyWithImpl<$Res> extends _$AddProfileStateCopyWithImpl<$Res>
       genders: genders == freezed ? _value.genders : genders as List<bool>,
       genderIndex:
           genderIndex == freezed ? _value.genderIndex : genderIndex as int,
+      emptyProfile: emptyProfile == freezed
+          ? _value.emptyProfile
+          : emptyProfile as Profile,
     ));
   }
 }
@@ -166,7 +189,8 @@ class _$_Initial implements _Initial {
       this.profiles,
       this.profileName,
       this.genders,
-      this.genderIndex});
+      this.genderIndex,
+      this.emptyProfile});
 
   @override
   final int profilesCount;
@@ -178,10 +202,12 @@ class _$_Initial implements _Initial {
   final List<bool> genders;
   @override
   final int genderIndex;
+  @override
+  final Profile emptyProfile;
 
   @override
   String toString() {
-    return 'AddProfileState.initial(profilesCount: $profilesCount, profiles: $profiles, profileName: $profileName, genders: $genders, genderIndex: $genderIndex)';
+    return 'AddProfileState.initial(profilesCount: $profilesCount, profiles: $profiles, profileName: $profileName, genders: $genders, genderIndex: $genderIndex, emptyProfile: $emptyProfile)';
   }
 
   @override
@@ -202,7 +228,10 @@ class _$_Initial implements _Initial {
                     .equals(other.genders, genders)) &&
             (identical(other.genderIndex, genderIndex) ||
                 const DeepCollectionEquality()
-                    .equals(other.genderIndex, genderIndex)));
+                    .equals(other.genderIndex, genderIndex)) &&
+            (identical(other.emptyProfile, emptyProfile) ||
+                const DeepCollectionEquality()
+                    .equals(other.emptyProfile, emptyProfile)));
   }
 
   @override
@@ -212,7 +241,8 @@ class _$_Initial implements _Initial {
       const DeepCollectionEquality().hash(profiles) ^
       const DeepCollectionEquality().hash(profileName) ^
       const DeepCollectionEquality().hash(genders) ^
-      const DeepCollectionEquality().hash(genderIndex);
+      const DeepCollectionEquality().hash(genderIndex) ^
+      const DeepCollectionEquality().hash(emptyProfile);
 
   @JsonKey(ignore: true)
   @override
@@ -223,24 +253,35 @@ class _$_Initial implements _Initial {
   @optionalTypeArgs
   TResult when<TResult extends Object>({
     @required
-        TResult initial(int profilesCount, List<Profile> profiles,
-            String profileName, List<bool> genders, int genderIndex),
+        TResult initial(
+            int profilesCount,
+            List<Profile> profiles,
+            String profileName,
+            List<bool> genders,
+            int genderIndex,
+            Profile emptyProfile),
   }) {
     assert(initial != null);
-    return initial(profilesCount, profiles, profileName, genders, genderIndex);
+    return initial(profilesCount, profiles, profileName, genders, genderIndex,
+        emptyProfile);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(int profilesCount, List<Profile> profiles,
-        String profileName, List<bool> genders, int genderIndex),
+    TResult initial(
+        int profilesCount,
+        List<Profile> profiles,
+        String profileName,
+        List<bool> genders,
+        int genderIndex,
+        Profile emptyProfile),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
-      return initial(
-          profilesCount, profiles, profileName, genders, genderIndex);
+      return initial(profilesCount, profiles, profileName, genders, genderIndex,
+          emptyProfile);
     }
     return orElse();
   }
@@ -274,7 +315,8 @@ abstract class _Initial implements AddProfileState {
       List<Profile> profiles,
       String profileName,
       List<bool> genders,
-      int genderIndex}) = _$_Initial;
+      int genderIndex,
+      Profile emptyProfile}) = _$_Initial;
 
   @override
   int get profilesCount;
@@ -286,6 +328,8 @@ abstract class _Initial implements AddProfileState {
   List<bool> get genders;
   @override
   int get genderIndex;
+  @override
+  Profile get emptyProfile;
   @override
   @JsonKey(ignore: true)
   _$InitialCopyWith<_Initial> get copyWith;

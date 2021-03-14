@@ -8,5 +8,6 @@ abstract class AddProfileState with _$AddProfileState {
     String profileName,
     List<bool> genders,
     int genderIndex,
+    Profile emptyProfile,
   }) = _Initial;
 }
