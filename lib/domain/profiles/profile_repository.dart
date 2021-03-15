@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:dartz/dartz.dart';
 import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
@@ -15,20 +16,37 @@ class ProfileRepository implements IProfileRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  Profile _profile;
+
+  Profile get actualProfile {
+    return this._profile;
+  }
+
+  void set actualProfile(Profile profile) {
+    this._profile = profile;
+  }
+
+  @override
+  void chooseProfile(Profile profile) {
+    actualProfile = profile;
+  }
+
+  @override
+  Profile getActualProfile() {
+    return actualProfile != null ? actualProfile : Profile.empty();
+  }
+
   @override
   Future<Either<ProfileFailure, Unit>> getProfiles() {}
 
   @override
   Future<Either<ProfileFailure, Unit>> saveProfile(Profile profile) async {
     var result = await getIt<IAuthRepository>().getSignedInUser();
-    String uid;
 
     if (result.isSome()) {
-      uid = result.getOrElse(() => null).uid;
+      String uid = result.getOrElse(() => null).uid;
 
-      var infoAboutAddingProfiles;
-
-      infoAboutAddingProfiles = await _firestore
+      final infoAboutAddingProfiles = await _firestore
           .collection('families')
           .doc(uid)
           .collection('profiles')
@@ -38,8 +56,7 @@ class ProfileRepository implements IProfileRepository {
 
       if (infoAboutAddingProfiles is Unit) {
         if (profile.hasImage) {
-          Either<ProfileFailure, Unit> infoAboutImage;
-          infoAboutImage = await _savePhotoToFirebase(profile, uid);
+          final infoAboutImage = await _savePhotoToFirebase(profile, uid);
 
           if (infoAboutImage.isRight()) {
             return right(unit);
@@ -64,6 +81,20 @@ class ProfileRepository implements IProfileRepository {
 
       return right(unit);
     } on FirebaseException catch (e) {
+      return left(ProfileFailure());
+    }
+  }
+
+  @override
+  Future<Either<ProfileFailure, PickedFile>> getImage() async {
+    ImagePicker imagePicker = ImagePicker();
+
+    try {
+      final infoAboutTakenPhoto =
+          await imagePicker.getImage(source: ImageSource.gallery);
+
+      return right(infoAboutTakenPhoto);
+    } on Exception catch (e) {
       return left(ProfileFailure());
     }
   }

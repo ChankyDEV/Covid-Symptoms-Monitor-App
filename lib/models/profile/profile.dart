@@ -22,6 +22,16 @@ class Profile extends Equatable {
     );
   }
 
+  bool isEmpty() {
+    if (this.hasImage == false &&
+        this.name == '' &&
+        this.gender == Gender.none) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   List<Object> get props => [name, hasImage, gender, avatar];
 

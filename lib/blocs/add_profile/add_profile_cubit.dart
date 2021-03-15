@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
@@ -72,32 +71,34 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     print(profile.name);
     var profs = state.profiles;
     profs.remove(profile);
-    emit(state.copyWith(profilesCount: profs.length, profiles: profs));
+    emit(state.copyWith(
+      profilesCount: profs.length,
+      profiles: profs,
+    ));
   }
 
   Future<void> chooseImage() async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(
+      isLoading: true,
+    ));
 
-    //TODO: Change location of taking pictures. Move to repo
-    var imgPicker = ImagePicker();
-    PickedFile avatar;
-    try {
-      avatar = await imgPicker.getImage(source: ImageSource.gallery);
-    } catch (e) {}
+    final avatar = await profileRepository.getImage();
 
-    if (avatar != null) {
-      var empty = state.emptyProfile.copyWith(avatar: avatar, hasImage: true);
-      emit(state.copyWith(
-        emptyProfile: empty,
-        isLoading: false,
-      ));
-    } else {
-      emit(state.copyWith(isLoading: false));
-    }
+    avatar.fold(
+        (failure) => emit(state.copyWith(
+              isLoading: false,
+            )),
+        (file) => emit(state.copyWith(
+              emptyProfile:
+                  state.emptyProfile.copyWith(avatar: file, hasImage: true),
+              isLoading: false,
+            )));
   }
 
   void nameChanged(String input) {
-    emit(state.copyWith(profileName: input));
+    emit(state.copyWith(
+      profileName: input,
+    ));
   }
 
   void ganderChanged(int index) {
@@ -110,29 +111,44 @@ class AddProfileCubit extends Cubit<AddProfileState> {
       }
     }
 
-    emit(state.copyWith(genderIndex: index, genders: state.genders));
+    emit(state.copyWith(
+      genderIndex: index,
+      genders: state.genders,
+    ));
   }
 
   void save() async {
-    var failureOrSuccess;
     if (state.profiles.isEmpty) {
-      emit(
-          state.copyWith(showError: true, errorText: 'Dodaj członków rodziny'));
+      emit(state.copyWith(
+        showError: true,
+        errorText: 'Dodaj członków rodziny',
+      ));
     } else {
-      emit(state.copyWith(isLoading: true));
+      emit(
+        state.copyWith(
+          isLoading: true,
+        ),
+      );
 
       state.profiles.forEach((profile) async {
-        failureOrSuccess = await profileRepository.saveProfile(profile);
+        final failureOrSuccess = await profileRepository.saveProfile(profile);
 
         if (failureOrSuccess.isLeft()) {
           emit(state.copyWith(
-              errorText: 'Błąd połączenia z serwerem', showError: true));
+            errorText: 'Błąd połączenia z serwerem',
+            showError: true,
+          ));
           return;
         }
 
-        emit(state.copyWith(showError: false, canGo: true));
+        emit(state.copyWith(
+          showError: false,
+          canGo: true,
+        ));
       });
     }
-    emit(state.copyWith(showError: false));
+    emit(state.copyWith(
+      showError: false,
+    ));
   }
 }
