@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_state.dart';
 
-
 class AuthScreen extends StatelessWidget {
   final bool isLogin;
   AuthScreen({this.isLogin});
@@ -23,7 +22,7 @@ class AuthScreen extends StatelessWidget {
     }, builder: (context, state) {
       return Material(
         child: SafeArea(
-                  child: Stack(
+          child: Stack(
             children: <Widget>[
               Container(
                 height: MediaQuery.of(context).size.height * 0.4,

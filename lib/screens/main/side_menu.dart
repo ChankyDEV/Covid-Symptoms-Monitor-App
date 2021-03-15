@@ -85,6 +85,18 @@ class SideMenu extends StatelessWidget {
                   'Więcej informacji',
                   style: const TextStyle(color: Colors.white),
                 )),
+            TextButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/add_profiles');
+                },
+                icon: Icon(
+                  Icons.aspect_ratio,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Tworzenie profili - testowo',
+                  style: const TextStyle(color: Colors.white),
+                )),
             Expanded(
               flex: 8,
               child: Padding(

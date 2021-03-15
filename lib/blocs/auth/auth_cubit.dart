@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/registration/auth_failure.dart';
 import 'package:symptoms_monitor/domain/registration/i_authenticate_repository.dart';
+import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'auth_state.dart';
 
 @injectable

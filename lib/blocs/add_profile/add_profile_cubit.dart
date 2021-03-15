@@ -1,13 +1,19 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/animation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:injectable/injectable.dart';
+import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
 part 'add_profile_state.dart';
 part 'add_profile_cubit.freezed.dart';
 
+@injectable
 class AddProfileCubit extends Cubit<AddProfileState> {
-  AddProfileCubit()
+  final IProfileRepository profileRepository;
+
+  AddProfileCubit({@required this.profileRepository})
       : super(AddProfileState.initial(
             profilesCount: 0,
             profiles: [],
@@ -59,7 +65,6 @@ class AddProfileCubit extends Cubit<AddProfileState> {
 
   Future<void> chooseImage() async {
     //TODO: Change location of taking pictures. Move to repo
-
     var imgPicker = ImagePicker();
     PickedFile avatar;
     try {
@@ -67,10 +72,7 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     } catch (e) {}
 
     if (avatar != null) {
-      //TODO: Send avatar to firebase
-
       var empty = state.emptyProfile.copyWith(avatar: avatar, hasImage: true);
-
       emit(state.copyWith(emptyProfile: empty));
     }
   }
@@ -90,5 +92,13 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     }
 
     emit(state.copyWith(genderIndex: index, genders: state.genders));
+  }
+
+  Future<void> save() async {
+    var failureOrSuccess = await profileRepository.saveProfiles(state.profiles);
+    if (failureOrSuccess.isLeft()) {
+    } else {
+      emit(state.copyWith(profilesSaved: true));
+    }
   }
 }

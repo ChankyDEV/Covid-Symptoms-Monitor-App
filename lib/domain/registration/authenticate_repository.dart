@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/registration/auth_failure.dart';
+import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'i_authenticate_repository.dart';
 
 @LazySingleton(as: IAuthRepository)
@@ -49,7 +50,7 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<Option<User>> getSignedInUser() async => optionOf(_auth.currentUser);
-  
+
   @override
   Stream<User> onAuthStateChanged() {
     return _auth.authStateChanges();

@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/screens/profile/profile_card.dart';
-
 
 import '../const.dart';
 import 'new_profile_form.dart';
@@ -21,7 +19,7 @@ class AddProfiles extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.save, color: Colors.white),
                   onPressed: () {
-                    //TODO: Save profiles to firebase
+                    BlocProvider.of<AddProfileCubit>(context).save();
                   })
             ],
             backgroundColor: Colors.transparent,
