@@ -122,7 +122,7 @@ class ProfileRepository implements IProfileRepository {
     }
   }
 
-  _queryToProfiles(QuerySnapshot snapshot) {
+  List<Profile> _queryToProfiles(QuerySnapshot snapshot) {
     List<Profile> profiles = [];
     snapshot.docs.forEach((doc) {
       profiles.add(Profile.fromMap(doc.data()));
