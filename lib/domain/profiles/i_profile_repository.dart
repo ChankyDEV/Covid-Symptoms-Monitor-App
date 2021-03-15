@@ -5,7 +5,7 @@ import 'package:symptoms_monitor/models/profile/profile.dart';
 
 abstract class IProfileRepository {
   Future<Either<ProfileFailure, Unit>> saveProfile(Profile profile);
-  Future<Either<ProfileFailure, Unit>> getProfiles();
+  Future<Either<ProfileFailure, List<Profile>>> getProfiles();
   Future<Either<ProfileFailure, PickedFile>> getImage();
   void chooseProfile(Profile profile);
   Profile getActualProfile();

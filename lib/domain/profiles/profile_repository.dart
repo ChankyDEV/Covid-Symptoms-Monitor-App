@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
@@ -22,7 +23,7 @@ class ProfileRepository implements IProfileRepository {
     return this._profile;
   }
 
-  void set actualProfile(Profile profile) {
+  set actualProfile(Profile profile) {
     this._profile = profile;
   }
 
@@ -37,14 +38,36 @@ class ProfileRepository implements IProfileRepository {
   }
 
   @override
-  Future<Either<ProfileFailure, Unit>> getProfiles() {}
+  Future<Either<ProfileFailure, List<Profile>>> getProfiles() async {
+    var user = await getIt<IAuthRepository>().getSignedInUser();
+
+    if (user.isSome()) {
+      String uid = user.getOrElse(() => null).uid;
+
+      final infoAboutListOfProfiles = await _firestore
+          .collection('families')
+          .doc(uid)
+          .collection('profiles')
+          .get()
+          .then((query) => _queryToProfiles(query))
+          .catchError((onError) => ProfileFailure());
+
+      if (infoAboutListOfProfiles is List<Profile>) {
+        return right(infoAboutListOfProfiles);
+      } else {
+        return left(ProfileFailure());
+      }
+    } else {
+      return left(ProfileFailure());
+    }
+  }
 
   @override
   Future<Either<ProfileFailure, Unit>> saveProfile(Profile profile) async {
-    var result = await getIt<IAuthRepository>().getSignedInUser();
+    var user = await getIt<IAuthRepository>().getSignedInUser();
 
-    if (result.isSome()) {
-      String uid = result.getOrElse(() => null).uid;
+    if (user.isSome()) {
+      String uid = user.getOrElse(() => null).uid;
 
       final infoAboutAddingProfiles = await _firestore
           .collection('families')
@@ -97,5 +120,13 @@ class ProfileRepository implements IProfileRepository {
     } on Exception catch (e) {
       return left(ProfileFailure());
     }
+  }
+
+  _queryToProfiles(QuerySnapshot snapshot) {
+    List<Profile> profiles = [];
+    snapshot.docs.forEach((doc) {
+      profiles.add(Profile.fromMap(doc.data()));
+    });
+    return profiles;
   }
 }
