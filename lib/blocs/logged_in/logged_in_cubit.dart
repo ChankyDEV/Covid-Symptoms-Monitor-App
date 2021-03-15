@@ -21,6 +21,11 @@ class LoggedInCubit extends Cubit<LoggedInState> {
     });
   }
 
+  void logout() async {
+    await _authRepository.logout();
+    emit(LoggedInState.unauthenticated());
+  }
+
   @override
   Future<void> close() {
     _streamSubscription.cancel();

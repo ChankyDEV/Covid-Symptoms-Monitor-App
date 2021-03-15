@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
-import 'package:symptoms_monitor/screens/auth/add_profiles.dart';
 import 'package:symptoms_monitor/screens/main/main_screen.dart';
+import 'package:symptoms_monitor/screens/profile/add_profiles.dart';
 import 'package:symptoms_monitor/screens/registration/auth_screen.dart';
 import 'package:symptoms_monitor/screens/wrapper.dart';
 import '../inject.dart';
@@ -28,7 +28,8 @@ class CustomRouter {
                 value: getIt<AuthCubit>(), child: AuthScreen(isLogin: false)));
         break;
       case '/main':
-        return MaterialPageRoute(builder: (_) => MainScreen());
+        return MaterialPageRoute(
+            builder: (_) => MainScreen());
         break;
       case '/add_profiles':
         return MaterialPageRoute(

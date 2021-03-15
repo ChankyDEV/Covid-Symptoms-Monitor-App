@@ -15,8 +15,8 @@ class Wrapper extends StatelessWidget {
       return state.when(
           unauthenticated: () => BlocProvider.value(
               value: getIt<AuthCubit>(), child: AuthScreen(isLogin: true)),
-          authenticated: (User user) => MainScreen());
+          authenticated: (User user) => MainScreen()
+              );
     });
   }
 }
-

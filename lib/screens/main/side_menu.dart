@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
+import 'package:symptoms_monitor/blocs/logged_in/logged_in_state.dart';
 import 'package:symptoms_monitor/screens/const.dart';
 
 class SideMenu extends StatelessWidget {
@@ -87,22 +90,27 @@ class SideMenu extends StatelessWidget {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                        ),
-                        label: Text(
-                          'Wyloguj się',
-                          style: const TextStyle(color: Colors.white),
-                        )),
-                  ],
-                ),
+                child: BlocBuilder<LoggedInCubit, LoggedInState>(
+                    builder: (context, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton.icon(
+                          onPressed: () {
+                            context.read<LoggedInCubit>().logout();
+                          },
+                          icon: Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            'Wyloguj się',
+                            style: const TextStyle(color: Colors.white),
+                          )),
+                    ],
+                  );
+                }),
               ),
             ),
           ],
