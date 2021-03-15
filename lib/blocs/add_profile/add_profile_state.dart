@@ -9,6 +9,9 @@ abstract class AddProfileState with _$AddProfileState {
     List<bool> genders,
     int genderIndex,
     Profile emptyProfile,
-    bool profilesSaved,
+    bool showError,
+    String errorText,
+    bool canGo,
+    bool isLoading,
   }) = _Initial;
 }

@@ -1,53 +1,77 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 
 class Profile extends Equatable {
   final String name;
-  final String imageUrl;
   final bool hasImage;
   final Gender gender;
   final PickedFile avatar;
 
-  Profile(
-      {@required this.name,
-      @required this.imageUrl,
-      @required this.hasImage,
-      @required this.gender,
-      this.avatar});
+  Profile({@required this.name, this.hasImage, this.gender, this.avatar});
 
   factory Profile.empty() {
     return Profile(
       hasImage: false,
-      imageUrl: '',
       name: '',
       gender: Gender.none,
     );
   }
 
-  bool isEmpty() {
-    if (this.imageUrl == '' && this.name == '') {
-      return true;
-    }
-    return false;
-  }
-
   @override
-  List<Object> get props => [name, imageUrl, hasImage, gender, avatar];
+  List<Object> get props => [name, hasImage, gender, avatar];
 
   Profile copyWith({
     String name,
-    String imageUrl,
     bool hasImage,
     PickedFile avatar,
   }) {
     return Profile(
       name: name ?? this.name,
-      imageUrl: imageUrl ?? this.imageUrl,
       hasImage: hasImage ?? this.hasImage,
       gender: gender ?? this.gender,
       avatar: avatar ?? this.avatar,
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'hasImage': hasImage,
+      'gender': gender.toString(),
+    };
+  }
+
+  factory Profile.fromMap(Map<String, dynamic> map) {
+    return Profile(
+      name: map['name'],
+      hasImage: map['hasImage'],
+      gender: _stringToGender(map['gender']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Profile.fromJson(String source) =>
+      Profile.fromMap(json.decode(source));
+}
+
+Gender _stringToGender(String input) {
+  switch (input) {
+    case 'male':
+      return Gender.male;
+      break;
+    case 'female':
+      return Gender.female;
+      break;
+    case 'none':
+      return Gender.none;
+      break;
+    default:
+      return null;
   }
 }

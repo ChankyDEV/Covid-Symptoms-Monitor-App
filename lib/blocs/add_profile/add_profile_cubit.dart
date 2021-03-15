@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/animation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
@@ -15,12 +14,17 @@ class AddProfileCubit extends Cubit<AddProfileState> {
 
   AddProfileCubit({@required this.profileRepository})
       : super(AddProfileState.initial(
-            profilesCount: 0,
-            profiles: [],
-            profileName: '',
-            genders: [true, false, false],
-            genderIndex: 0,
-            emptyProfile: Profile.empty()));
+          profilesCount: 0,
+          profiles: [],
+          profileName: '',
+          genders: [true, false, false],
+          genderIndex: 0,
+          emptyProfile: Profile.empty(),
+          errorText: '',
+          showError: false,
+          canGo: false,
+          isLoading: false,
+        ));
 
   void add() {
     if (state.profileName.isNotEmpty) {
@@ -34,13 +38,21 @@ class AddProfileCubit extends Cubit<AddProfileState> {
       } else {
         gender = Gender.none;
       }
+      var name =
+          state.profileName.replaceAll(new RegExp(r"\s+"), "").toUpperCase();
+
+      bool hasImage;
+      if (state.emptyProfile.avatar != null) {
+        hasImage = true;
+      } else {
+        hasImage = false;
+      }
 
       profiles.insert(
           0,
           Profile(
-            hasImage: true,
-            imageUrl: '',
-            name: state.profileName,
+            hasImage: hasImage,
+            name: name,
             gender: gender,
             avatar: state.emptyProfile.avatar,
           ));
@@ -64,6 +76,8 @@ class AddProfileCubit extends Cubit<AddProfileState> {
   }
 
   Future<void> chooseImage() async {
+    emit(state.copyWith(isLoading: true));
+
     //TODO: Change location of taking pictures. Move to repo
     var imgPicker = ImagePicker();
     PickedFile avatar;
@@ -73,7 +87,12 @@ class AddProfileCubit extends Cubit<AddProfileState> {
 
     if (avatar != null) {
       var empty = state.emptyProfile.copyWith(avatar: avatar, hasImage: true);
-      emit(state.copyWith(emptyProfile: empty));
+      emit(state.copyWith(
+        emptyProfile: empty,
+        isLoading: false,
+      ));
+    } else {
+      emit(state.copyWith(isLoading: false));
     }
   }
 
@@ -94,11 +113,26 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     emit(state.copyWith(genderIndex: index, genders: state.genders));
   }
 
-  Future<void> save() async {
-    var failureOrSuccess = await profileRepository.saveProfiles(state.profiles);
-    if (failureOrSuccess.isLeft()) {
+  void save() async {
+    var failureOrSuccess;
+    if (state.profiles.isEmpty) {
+      emit(
+          state.copyWith(showError: true, errorText: 'Dodaj członków rodziny'));
     } else {
-      emit(state.copyWith(profilesSaved: true));
+      emit(state.copyWith(isLoading: true));
+
+      state.profiles.forEach((profile) async {
+        failureOrSuccess = await profileRepository.saveProfile(profile);
+
+        if (failureOrSuccess.isLeft()) {
+          emit(state.copyWith(
+              errorText: 'Błąd połączenia z serwerem', showError: true));
+          return;
+        }
+
+        emit(state.copyWith(showError: false, canGo: true));
+      });
     }
+    emit(state.copyWith(showError: false));
   }
 }
