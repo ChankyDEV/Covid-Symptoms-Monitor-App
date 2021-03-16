@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/animation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
@@ -15,12 +13,17 @@ class AddProfileCubit extends Cubit<AddProfileState> {
 
   AddProfileCubit({@required this.profileRepository})
       : super(AddProfileState.initial(
-            profilesCount: 0,
-            profiles: [],
-            profileName: '',
-            genders: [true, false, false],
-            genderIndex: 0,
-            emptyProfile: Profile.empty()));
+          profilesCount: 0,
+          profiles: [],
+          profileName: '',
+          genders: [true, false, false],
+          genderIndex: 0,
+          emptyProfile: Profile.empty(),
+          errorText: '',
+          showError: false,
+          canGo: false,
+          isLoading: false,
+        ));
 
   void add() {
     if (state.profileName.isNotEmpty) {
@@ -34,13 +37,21 @@ class AddProfileCubit extends Cubit<AddProfileState> {
       } else {
         gender = Gender.none;
       }
+      var name =
+          state.profileName.replaceAll(new RegExp(r"\s+"), "").toUpperCase();
+
+      bool hasImage;
+      if (state.emptyProfile.avatar != null) {
+        hasImage = true;
+      } else {
+        hasImage = false;
+      }
 
       profiles.insert(
           0,
           Profile(
-            hasImage: true,
-            imageUrl: '',
-            name: state.profileName,
+            hasImage: hasImage,
+            name: name,
             gender: gender,
             avatar: state.emptyProfile.avatar,
           ));
@@ -60,25 +71,34 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     print(profile.name);
     var profs = state.profiles;
     profs.remove(profile);
-    emit(state.copyWith(profilesCount: profs.length, profiles: profs));
+    emit(state.copyWith(
+      profilesCount: profs.length,
+      profiles: profs,
+    ));
   }
 
   Future<void> chooseImage() async {
-    //TODO: Change location of taking pictures. Move to repo
-    var imgPicker = ImagePicker();
-    PickedFile avatar;
-    try {
-      avatar = await imgPicker.getImage(source: ImageSource.gallery);
-    } catch (e) {}
+    emit(state.copyWith(
+      isLoading: true,
+    ));
 
-    if (avatar != null) {
-      var empty = state.emptyProfile.copyWith(avatar: avatar, hasImage: true);
-      emit(state.copyWith(emptyProfile: empty));
-    }
+    final avatar = await profileRepository.getImage();
+
+    avatar.fold(
+        (failure) => emit(state.copyWith(
+              isLoading: false,
+            )),
+        (file) => emit(state.copyWith(
+              emptyProfile:
+                  state.emptyProfile.copyWith(avatar: file, hasImage: true),
+              isLoading: false,
+            )));
   }
 
   void nameChanged(String input) {
-    emit(state.copyWith(profileName: input));
+    emit(state.copyWith(
+      profileName: input,
+    ));
   }
 
   void ganderChanged(int index) {
@@ -91,14 +111,44 @@ class AddProfileCubit extends Cubit<AddProfileState> {
       }
     }
 
-    emit(state.copyWith(genderIndex: index, genders: state.genders));
+    emit(state.copyWith(
+      genderIndex: index,
+      genders: state.genders,
+    ));
   }
 
-  Future<void> save() async {
-    var failureOrSuccess = await profileRepository.saveProfiles(state.profiles);
-    if (failureOrSuccess.isLeft()) {
+  void save() async {
+    if (state.profiles.isEmpty) {
+      emit(state.copyWith(
+        showError: true,
+        errorText: 'Dodaj członków rodziny',
+      ));
     } else {
-      emit(state.copyWith(profilesSaved: true));
+      emit(
+        state.copyWith(
+          isLoading: true,
+        ),
+      );
+
+      state.profiles.forEach((profile) async {
+        final failureOrSuccess = await profileRepository.saveProfile(profile);
+
+        if (failureOrSuccess.isLeft()) {
+          emit(state.copyWith(
+            errorText: 'Błąd połączenia z serwerem',
+            showError: true,
+          ));
+          return;
+        }
+
+        emit(state.copyWith(
+          showError: false,
+          canGo: true,
+        ));
+      });
     }
+    emit(state.copyWith(
+      showError: false,
+    ));
   }
 }

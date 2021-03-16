@@ -21,7 +21,10 @@ class _$AddProfileStateTearOff {
       List<bool> genders,
       int genderIndex,
       Profile emptyProfile,
-      bool profilesSaved}) {
+      bool showError,
+      String errorText,
+      bool canGo,
+      bool isLoading}) {
     return _Initial(
       profilesCount: profilesCount,
       profiles: profiles,
@@ -29,7 +32,10 @@ class _$AddProfileStateTearOff {
       genders: genders,
       genderIndex: genderIndex,
       emptyProfile: emptyProfile,
-      profilesSaved: profilesSaved,
+      showError: showError,
+      errorText: errorText,
+      canGo: canGo,
+      isLoading: isLoading,
     );
   }
 }
@@ -46,7 +52,10 @@ mixin _$AddProfileState {
   List<bool> get genders;
   int get genderIndex;
   Profile get emptyProfile;
-  bool get profilesSaved;
+  bool get showError;
+  String get errorText;
+  bool get canGo;
+  bool get isLoading;
 
   @optionalTypeArgs
   TResult when<TResult extends Object>({
@@ -58,7 +67,10 @@ mixin _$AddProfileState {
             List<bool> genders,
             int genderIndex,
             Profile emptyProfile,
-            bool profilesSaved),
+            bool showError,
+            String errorText,
+            bool canGo,
+            bool isLoading),
   });
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
@@ -69,7 +81,10 @@ mixin _$AddProfileState {
         List<bool> genders,
         int genderIndex,
         Profile emptyProfile,
-        bool profilesSaved),
+        bool showError,
+        String errorText,
+        bool canGo,
+        bool isLoading),
     @required TResult orElse(),
   });
   @optionalTypeArgs
@@ -98,7 +113,10 @@ abstract class $AddProfileStateCopyWith<$Res> {
       List<bool> genders,
       int genderIndex,
       Profile emptyProfile,
-      bool profilesSaved});
+      bool showError,
+      String errorText,
+      bool canGo,
+      bool isLoading});
 }
 
 /// @nodoc
@@ -118,7 +136,10 @@ class _$AddProfileStateCopyWithImpl<$Res>
     Object genders = freezed,
     Object genderIndex = freezed,
     Object emptyProfile = freezed,
-    Object profilesSaved = freezed,
+    Object showError = freezed,
+    Object errorText = freezed,
+    Object canGo = freezed,
+    Object isLoading = freezed,
   }) {
     return _then(_value.copyWith(
       profilesCount: profilesCount == freezed
@@ -134,9 +155,10 @@ class _$AddProfileStateCopyWithImpl<$Res>
       emptyProfile: emptyProfile == freezed
           ? _value.emptyProfile
           : emptyProfile as Profile,
-      profilesSaved: profilesSaved == freezed
-          ? _value.profilesSaved
-          : profilesSaved as bool,
+      showError: showError == freezed ? _value.showError : showError as bool,
+      errorText: errorText == freezed ? _value.errorText : errorText as String,
+      canGo: canGo == freezed ? _value.canGo : canGo as bool,
+      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
 }
@@ -154,7 +176,10 @@ abstract class _$InitialCopyWith<$Res>
       List<bool> genders,
       int genderIndex,
       Profile emptyProfile,
-      bool profilesSaved});
+      bool showError,
+      String errorText,
+      bool canGo,
+      bool isLoading});
 }
 
 /// @nodoc
@@ -174,7 +199,10 @@ class __$InitialCopyWithImpl<$Res> extends _$AddProfileStateCopyWithImpl<$Res>
     Object genders = freezed,
     Object genderIndex = freezed,
     Object emptyProfile = freezed,
-    Object profilesSaved = freezed,
+    Object showError = freezed,
+    Object errorText = freezed,
+    Object canGo = freezed,
+    Object isLoading = freezed,
   }) {
     return _then(_Initial(
       profilesCount: profilesCount == freezed
@@ -190,9 +218,10 @@ class __$InitialCopyWithImpl<$Res> extends _$AddProfileStateCopyWithImpl<$Res>
       emptyProfile: emptyProfile == freezed
           ? _value.emptyProfile
           : emptyProfile as Profile,
-      profilesSaved: profilesSaved == freezed
-          ? _value.profilesSaved
-          : profilesSaved as bool,
+      showError: showError == freezed ? _value.showError : showError as bool,
+      errorText: errorText == freezed ? _value.errorText : errorText as String,
+      canGo: canGo == freezed ? _value.canGo : canGo as bool,
+      isLoading: isLoading == freezed ? _value.isLoading : isLoading as bool,
     ));
   }
 }
@@ -206,7 +235,10 @@ class _$_Initial implements _Initial {
       this.genders,
       this.genderIndex,
       this.emptyProfile,
-      this.profilesSaved});
+      this.showError,
+      this.errorText,
+      this.canGo,
+      this.isLoading});
 
   @override
   final int profilesCount;
@@ -221,11 +253,17 @@ class _$_Initial implements _Initial {
   @override
   final Profile emptyProfile;
   @override
-  final bool profilesSaved;
+  final bool showError;
+  @override
+  final String errorText;
+  @override
+  final bool canGo;
+  @override
+  final bool isLoading;
 
   @override
   String toString() {
-    return 'AddProfileState.initial(profilesCount: $profilesCount, profiles: $profiles, profileName: $profileName, genders: $genders, genderIndex: $genderIndex, emptyProfile: $emptyProfile, profilesSaved: $profilesSaved)';
+    return 'AddProfileState.initial(profilesCount: $profilesCount, profiles: $profiles, profileName: $profileName, genders: $genders, genderIndex: $genderIndex, emptyProfile: $emptyProfile, showError: $showError, errorText: $errorText, canGo: $canGo, isLoading: $isLoading)';
   }
 
   @override
@@ -250,9 +288,17 @@ class _$_Initial implements _Initial {
             (identical(other.emptyProfile, emptyProfile) ||
                 const DeepCollectionEquality()
                     .equals(other.emptyProfile, emptyProfile)) &&
-            (identical(other.profilesSaved, profilesSaved) ||
+            (identical(other.showError, showError) ||
                 const DeepCollectionEquality()
-                    .equals(other.profilesSaved, profilesSaved)));
+                    .equals(other.showError, showError)) &&
+            (identical(other.errorText, errorText) ||
+                const DeepCollectionEquality()
+                    .equals(other.errorText, errorText)) &&
+            (identical(other.canGo, canGo) ||
+                const DeepCollectionEquality().equals(other.canGo, canGo)) &&
+            (identical(other.isLoading, isLoading) ||
+                const DeepCollectionEquality()
+                    .equals(other.isLoading, isLoading)));
   }
 
   @override
@@ -264,7 +310,10 @@ class _$_Initial implements _Initial {
       const DeepCollectionEquality().hash(genders) ^
       const DeepCollectionEquality().hash(genderIndex) ^
       const DeepCollectionEquality().hash(emptyProfile) ^
-      const DeepCollectionEquality().hash(profilesSaved);
+      const DeepCollectionEquality().hash(showError) ^
+      const DeepCollectionEquality().hash(errorText) ^
+      const DeepCollectionEquality().hash(canGo) ^
+      const DeepCollectionEquality().hash(isLoading);
 
   @JsonKey(ignore: true)
   @override
@@ -282,11 +331,14 @@ class _$_Initial implements _Initial {
             List<bool> genders,
             int genderIndex,
             Profile emptyProfile,
-            bool profilesSaved),
+            bool showError,
+            String errorText,
+            bool canGo,
+            bool isLoading),
   }) {
     assert(initial != null);
     return initial(profilesCount, profiles, profileName, genders, genderIndex,
-        emptyProfile, profilesSaved);
+        emptyProfile, showError, errorText, canGo, isLoading);
   }
 
   @override
@@ -299,13 +351,16 @@ class _$_Initial implements _Initial {
         List<bool> genders,
         int genderIndex,
         Profile emptyProfile,
-        bool profilesSaved),
+        bool showError,
+        String errorText,
+        bool canGo,
+        bool isLoading),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
       return initial(profilesCount, profiles, profileName, genders, genderIndex,
-          emptyProfile, profilesSaved);
+          emptyProfile, showError, errorText, canGo, isLoading);
     }
     return orElse();
   }
@@ -341,7 +396,10 @@ abstract class _Initial implements AddProfileState {
       List<bool> genders,
       int genderIndex,
       Profile emptyProfile,
-      bool profilesSaved}) = _$_Initial;
+      bool showError,
+      String errorText,
+      bool canGo,
+      bool isLoading}) = _$_Initial;
 
   @override
   int get profilesCount;
@@ -356,7 +414,13 @@ abstract class _Initial implements AddProfileState {
   @override
   Profile get emptyProfile;
   @override
-  bool get profilesSaved;
+  bool get showError;
+  @override
+  String get errorText;
+  @override
+  bool get canGo;
+  @override
+  bool get isLoading;
   @override
   @JsonKey(ignore: true)
   _$InitialCopyWith<_Initial> get copyWith;

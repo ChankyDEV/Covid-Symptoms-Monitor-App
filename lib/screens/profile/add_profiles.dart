@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
+import 'package:symptoms_monitor/screens/core/loading_indicator.dart';
+import 'package:symptoms_monitor/screens/core/utils.dart';
 import 'package:symptoms_monitor/screens/profile/profile_card.dart';
 
 import '../const.dart';
@@ -9,33 +11,44 @@ import 'new_profile_form.dart';
 class AddProfiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AddProfileCubit, AddProfileState>(
+    return BlocConsumer<AddProfileCubit, AddProfileState>(
+      listener: (context, state) {
+        if (state.showError) {
+          showError(context, state.errorText);
+        } else {
+          if (state.canGo) {
+            Navigator.of(context).pushReplacementNamed('/main');
+          }
+        }
+      },
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Color(cBlueDark),
-          appBar: AppBar(
-            leading: Container(),
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.save, color: Colors.white),
-                  onPressed: () {
-                    BlocProvider.of<AddProfileCubit>(context).save();
-                  })
-            ],
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            centerTitle: true,
-            title: Text(
-              'Twoja rodzina',
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(child: _build(state)),
-            ],
-          ),
-        );
+        return state.isLoading
+            ? LoadingIndicator()
+            : Scaffold(
+                backgroundColor: Color(cBlueDark),
+                appBar: AppBar(
+                  leading: Container(),
+                  actions: [
+                    IconButton(
+                        icon: Icon(Icons.save, color: Colors.white),
+                        onPressed: () {
+                          BlocProvider.of<AddProfileCubit>(context).save();
+                        })
+                  ],
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  centerTitle: true,
+                  title: Text(
+                    'Twoja rodzina',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                body: Column(
+                  children: [
+                    Expanded(child: _build(state)),
+                  ],
+                ),
+              );
       },
     );
   }
