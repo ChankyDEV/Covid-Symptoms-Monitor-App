@@ -66,7 +66,9 @@ class SideMenu extends StatelessWidget {
                   style: const TextStyle(color: Colors.white),
                 )),
             TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/profile_history');
+                },
                 icon: Icon(
                   Icons.history,
                   color: Colors.white,

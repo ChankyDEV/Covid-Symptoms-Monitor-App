@@ -4,6 +4,7 @@ import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
 import 'package:symptoms_monitor/domain/profiles/profile_repository.dart';
+import 'package:symptoms_monitor/screens/history/profile_history.dart';
 import 'package:symptoms_monitor/screens/main/main_screen.dart';
 import 'package:symptoms_monitor/screens/profile/add_profiles.dart';
 import 'package:symptoms_monitor/screens/profile_selection/profile_selection.dart';
@@ -46,6 +47,13 @@ class CustomRouter {
         return MaterialPageRoute(
           builder: (context) {
             return ProfileSelection();
+          },
+        );
+        break;
+      case '/profile_history':
+        return MaterialPageRoute(
+          builder: (context) {
+            return ProfileHistory();
           },
         );
         break;
