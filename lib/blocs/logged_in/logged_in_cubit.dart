@@ -13,8 +13,14 @@ class LoggedInCubit extends Cubit<LoggedInState> {
     _streamSubscription =
         _authRepository.onAuthStateChanged().listen((User user) {
       if (user != null) {
-        print(user);
-        emit(LoggedInState.authenticated(user));
+        DateTime userCreationDate = user.metadata.creationTime;
+        DateTime now = DateTime.now();
+        int minuteDifference = now.difference(userCreationDate).inMinutes;
+        if (minuteDifference > 0) {
+          emit(LoggedInState.login(user));
+        } else {
+          emit(LoggedInState.register(user));
+        }
       } else {
         emit(LoggedInState.unauthenticated());
       }
@@ -23,7 +29,6 @@ class LoggedInCubit extends Cubit<LoggedInState> {
 
   void logout() async {
     await _authRepository.logout();
-    emit(LoggedInState.unauthenticated());
   }
 
   @override

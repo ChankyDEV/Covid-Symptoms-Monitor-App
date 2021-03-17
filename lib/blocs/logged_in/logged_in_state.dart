@@ -5,5 +5,6 @@ part 'logged_in_state.freezed.dart';
 @freezed
 abstract class LoggedInState with _$LoggedInState {
   const factory LoggedInState.unauthenticated() = Unauthenticated;
-  const factory LoggedInState.authenticated(User user) = Authenticated;
+  const factory LoggedInState.login(User user) = Login;
+  const factory LoggedInState.register(User user) = Register;
 }
