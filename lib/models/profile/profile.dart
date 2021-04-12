@@ -12,7 +12,14 @@ class Profile extends Equatable {
   final Gender gender;
   final PickedFile avatar;
 
-  Profile({@required this.name, this.hasImage, this.gender, this.avatar});
+  Profile(
+      {@required this.name, @required this.hasImage, this.gender, this.avatar});
+
+  @override
+  List<Object> get props => [name, hasImage];
+
+  @override
+  bool get stringify => false;
 
   factory Profile.empty() {
     return Profile(
@@ -31,9 +38,6 @@ class Profile extends Equatable {
       return false;
     }
   }
-
-  @override
-  List<Object> get props => [name, hasImage, gender, avatar];
 
   Profile copyWith({
     String name,

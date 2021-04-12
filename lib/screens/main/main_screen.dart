@@ -87,8 +87,7 @@ class _MainScreenState extends State<MainScreen>
               return Stack(
                 children: [
                   BlocProvider.value(
-              value: getIt<LoggedInCubit>(), child: SideMenu()),
-                
+                      value: getIt<LoggedInCubit>(), child: SideMenu()),
                   Transform(
                     transform: Matrix4.identity()
                       ..translate(slide)
