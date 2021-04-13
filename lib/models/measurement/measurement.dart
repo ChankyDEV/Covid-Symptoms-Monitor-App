@@ -30,6 +30,13 @@ class Measurement implements Equatable {
         bloodSaturation: BloodSaturation(value: measurement.bloodSaturation),
         date: DateTime.parse(measurement.date));
   }
+  factory Measurement.empty() {
+    return Measurement(
+      heartRate: HeartRate(value: 0),
+      temperature: Temperature(value: 0.0),
+      bloodSaturation: BloodSaturation(value: 0),
+    );
+  }
 
   @override
   List<Object> get props => [heartRate, temperature, bloodSaturation, date];

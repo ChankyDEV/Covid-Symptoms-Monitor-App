@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
+import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
 import 'package:symptoms_monitor/screens/history/profile_history.dart';
 import 'package:symptoms_monitor/screens/main/main_screen.dart';
@@ -17,7 +18,12 @@ class CustomRouter {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(
-            builder: (_) => MainScreen()); //: BlocProvider.value(
+            builder: (_) => MultiBlocProvider(providers: [
+                  BlocProvider(
+                    create: (context) =>
+                        FrontScreenCubit()..prepareChosenStatisticList(),
+                  ),
+                ], child: MainScreen())); //: BlocProvider.value(
         //value: getIt<LoggedInCubit>(), child: Wrapper(),),);
         break;
       case '/login':
