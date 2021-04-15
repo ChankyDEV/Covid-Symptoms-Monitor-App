@@ -14,15 +14,15 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoggedInCubit, LoggedInState>(builder: (context, state) {
+      print("STATE $state");
       return state.when(
           unauthenticated: () => BlocProvider.value(
               value: getIt<AuthCubit>(), child: AuthScreen(isLogin: true)),
           login: (User user) => ProfileSelection(),
-          register: (User user)=> BlocProvider.value(
-              value: getIt<AddProfileCubit>(),
-              child: AddProfiles(),
-            )
-              );
+          register: (User user) => BlocProvider.value(
+                value: getIt<AddProfileCubit>(),
+                child: AddProfiles(),
+              ));
     });
   }
 }

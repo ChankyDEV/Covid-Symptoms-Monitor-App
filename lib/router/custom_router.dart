@@ -14,17 +14,24 @@ import '../inject.dart';
 
 class CustomRouter {
   Route onGenerateRoute(RouteSettings routeSettings) {
-    bool debug = false;
     switch (routeSettings.name) {
+
+
+
       case '/':
         return MaterialPageRoute(
-            builder: (_) => MultiBlocProvider(providers: [
+            builder: (_) =>  BlocProvider.value(
+        value: getIt<LoggedInCubit>(), child: Wrapper(),),);
+            
+      /*      
+            MultiBlocProvider(providers: [
                   BlocProvider(
                     create: (context) =>
                         FrontScreenCubit()..prepareChosenStatisticList(),
                   ),
-                ], child: MainScreen())); //: BlocProvider.value(
-        //value: getIt<LoggedInCubit>(), child: Wrapper(),),);
+                ], child: MainScreen()));
+                */
+      
         break;
       case '/login':
         return MaterialPageRoute(

@@ -19,7 +19,7 @@ class Profile extends Equatable {
   List<Object> get props => [name, hasImage];
 
   @override
-  bool get stringify => false;
+  bool get stringify => true;
 
   factory Profile.empty() {
     return Profile(

@@ -14,6 +14,7 @@ class LoggedInCubit extends Cubit<LoggedInState> {
         _authRepository.onAuthStateChanged().listen((User user) {
       if (user != null) {
         DateTime userCreationDate = user.metadata.creationTime;
+        print(userCreationDate);
         DateTime now = DateTime.now();
         int minuteDifference = now.difference(userCreationDate).inMinutes;
         if (minuteDifference > 0) {

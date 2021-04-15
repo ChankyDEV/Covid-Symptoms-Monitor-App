@@ -14,7 +14,7 @@ class AuthScreen extends StatelessWidget {
     return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
       if (state.isCorrect) {
         if (state.canGo) {
-          Navigator.of(context).pushNamed('/add_profiles');
+          
         }
       } else {
         showError(context, state.errorText);
