@@ -19,15 +19,23 @@ class _$FrontScreenStateTearOff {
       @required List<bool> chosenStatistic,
       @required int chosenIndex,
       @required bool isButtonClicked,
-      @required bool isDataReady,
-      @required Measurement measurement}) {
+      @required bool isDataDownloaded,
+      @required Measurement measurement,
+      @required bool lastMeasurementsLoading,
+      @required List<Measurement> lastMeasurements,
+      @required bool lastMeasurementsHadError,
+      @required bool newMeasurementsHadError}) {
     return _Initial(
       title: title,
       chosenStatistic: chosenStatistic,
       chosenIndex: chosenIndex,
       isButtonClicked: isButtonClicked,
-      isDataReady: isDataReady,
+      isDataDownloaded: isDataDownloaded,
       measurement: measurement,
+      lastMeasurementsLoading: lastMeasurementsLoading,
+      lastMeasurements: lastMeasurements,
+      lastMeasurementsHadError: lastMeasurementsHadError,
+      newMeasurementsHadError: newMeasurementsHadError,
     );
   }
 }
@@ -42,8 +50,12 @@ mixin _$FrontScreenState {
   List<bool> get chosenStatistic;
   int get chosenIndex;
   bool get isButtonClicked;
-  bool get isDataReady;
+  bool get isDataDownloaded;
   Measurement get measurement;
+  bool get lastMeasurementsLoading;
+  List<Measurement> get lastMeasurements;
+  bool get lastMeasurementsHadError;
+  bool get newMeasurementsHadError;
 
   @optionalTypeArgs
   TResult when<TResult extends Object>({
@@ -53,13 +65,26 @@ mixin _$FrontScreenState {
             List<bool> chosenStatistic,
             int chosenIndex,
             bool isButtonClicked,
-            bool isDataReady,
-            Measurement measurement),
+            bool isDataDownloaded,
+            Measurement measurement,
+            bool lastMeasurementsLoading,
+            List<Measurement> lastMeasurements,
+            bool lastMeasurementsHadError,
+            bool newMeasurementsHadError),
   });
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(String title, List<bool> chosenStatistic, int chosenIndex,
-        bool isButtonClicked, bool isDataReady, Measurement measurement),
+    TResult initial(
+        String title,
+        List<bool> chosenStatistic,
+        int chosenIndex,
+        bool isButtonClicked,
+        bool isDataDownloaded,
+        Measurement measurement,
+        bool lastMeasurementsLoading,
+        List<Measurement> lastMeasurements,
+        bool lastMeasurementsHadError,
+        bool newMeasurementsHadError),
     @required TResult orElse(),
   });
   @optionalTypeArgs
@@ -86,8 +111,12 @@ abstract class $FrontScreenStateCopyWith<$Res> {
       List<bool> chosenStatistic,
       int chosenIndex,
       bool isButtonClicked,
-      bool isDataReady,
-      Measurement measurement});
+      bool isDataDownloaded,
+      Measurement measurement,
+      bool lastMeasurementsLoading,
+      List<Measurement> lastMeasurements,
+      bool lastMeasurementsHadError,
+      bool newMeasurementsHadError});
 }
 
 /// @nodoc
@@ -105,8 +134,12 @@ class _$FrontScreenStateCopyWithImpl<$Res>
     Object chosenStatistic = freezed,
     Object chosenIndex = freezed,
     Object isButtonClicked = freezed,
-    Object isDataReady = freezed,
+    Object isDataDownloaded = freezed,
     Object measurement = freezed,
+    Object lastMeasurementsLoading = freezed,
+    Object lastMeasurements = freezed,
+    Object lastMeasurementsHadError = freezed,
+    Object newMeasurementsHadError = freezed,
   }) {
     return _then(_value.copyWith(
       title: title == freezed ? _value.title : title as String,
@@ -118,11 +151,24 @@ class _$FrontScreenStateCopyWithImpl<$Res>
       isButtonClicked: isButtonClicked == freezed
           ? _value.isButtonClicked
           : isButtonClicked as bool,
-      isDataReady:
-          isDataReady == freezed ? _value.isDataReady : isDataReady as bool,
+      isDataDownloaded: isDataDownloaded == freezed
+          ? _value.isDataDownloaded
+          : isDataDownloaded as bool,
       measurement: measurement == freezed
           ? _value.measurement
           : measurement as Measurement,
+      lastMeasurementsLoading: lastMeasurementsLoading == freezed
+          ? _value.lastMeasurementsLoading
+          : lastMeasurementsLoading as bool,
+      lastMeasurements: lastMeasurements == freezed
+          ? _value.lastMeasurements
+          : lastMeasurements as List<Measurement>,
+      lastMeasurementsHadError: lastMeasurementsHadError == freezed
+          ? _value.lastMeasurementsHadError
+          : lastMeasurementsHadError as bool,
+      newMeasurementsHadError: newMeasurementsHadError == freezed
+          ? _value.newMeasurementsHadError
+          : newMeasurementsHadError as bool,
     ));
   }
 }
@@ -138,8 +184,12 @@ abstract class _$InitialCopyWith<$Res>
       List<bool> chosenStatistic,
       int chosenIndex,
       bool isButtonClicked,
-      bool isDataReady,
-      Measurement measurement});
+      bool isDataDownloaded,
+      Measurement measurement,
+      bool lastMeasurementsLoading,
+      List<Measurement> lastMeasurements,
+      bool lastMeasurementsHadError,
+      bool newMeasurementsHadError});
 }
 
 /// @nodoc
@@ -157,8 +207,12 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
     Object chosenStatistic = freezed,
     Object chosenIndex = freezed,
     Object isButtonClicked = freezed,
-    Object isDataReady = freezed,
+    Object isDataDownloaded = freezed,
     Object measurement = freezed,
+    Object lastMeasurementsLoading = freezed,
+    Object lastMeasurements = freezed,
+    Object lastMeasurementsHadError = freezed,
+    Object newMeasurementsHadError = freezed,
   }) {
     return _then(_Initial(
       title: title == freezed ? _value.title : title as String,
@@ -170,11 +224,24 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
       isButtonClicked: isButtonClicked == freezed
           ? _value.isButtonClicked
           : isButtonClicked as bool,
-      isDataReady:
-          isDataReady == freezed ? _value.isDataReady : isDataReady as bool,
+      isDataDownloaded: isDataDownloaded == freezed
+          ? _value.isDataDownloaded
+          : isDataDownloaded as bool,
       measurement: measurement == freezed
           ? _value.measurement
           : measurement as Measurement,
+      lastMeasurementsLoading: lastMeasurementsLoading == freezed
+          ? _value.lastMeasurementsLoading
+          : lastMeasurementsLoading as bool,
+      lastMeasurements: lastMeasurements == freezed
+          ? _value.lastMeasurements
+          : lastMeasurements as List<Measurement>,
+      lastMeasurementsHadError: lastMeasurementsHadError == freezed
+          ? _value.lastMeasurementsHadError
+          : lastMeasurementsHadError as bool,
+      newMeasurementsHadError: newMeasurementsHadError == freezed
+          ? _value.newMeasurementsHadError
+          : newMeasurementsHadError as bool,
     ));
   }
 }
@@ -186,14 +253,22 @@ class _$_Initial implements _Initial {
       @required this.chosenStatistic,
       @required this.chosenIndex,
       @required this.isButtonClicked,
-      @required this.isDataReady,
-      @required this.measurement})
+      @required this.isDataDownloaded,
+      @required this.measurement,
+      @required this.lastMeasurementsLoading,
+      @required this.lastMeasurements,
+      @required this.lastMeasurementsHadError,
+      @required this.newMeasurementsHadError})
       : assert(title != null),
         assert(chosenStatistic != null),
         assert(chosenIndex != null),
         assert(isButtonClicked != null),
-        assert(isDataReady != null),
-        assert(measurement != null);
+        assert(isDataDownloaded != null),
+        assert(measurement != null),
+        assert(lastMeasurementsLoading != null),
+        assert(lastMeasurements != null),
+        assert(lastMeasurementsHadError != null),
+        assert(newMeasurementsHadError != null);
 
   @override
   final String title;
@@ -204,13 +279,21 @@ class _$_Initial implements _Initial {
   @override
   final bool isButtonClicked;
   @override
-  final bool isDataReady;
+  final bool isDataDownloaded;
   @override
   final Measurement measurement;
+  @override
+  final bool lastMeasurementsLoading;
+  @override
+  final List<Measurement> lastMeasurements;
+  @override
+  final bool lastMeasurementsHadError;
+  @override
+  final bool newMeasurementsHadError;
 
   @override
   String toString() {
-    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataReady: $isDataReady, measurement: $measurement)';
+    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataDownloaded: $isDataDownloaded, measurement: $measurement, lastMeasurementsLoading: $lastMeasurementsLoading, lastMeasurements: $lastMeasurements, lastMeasurementsHadError: $lastMeasurementsHadError, newMeasurementsHadError: $newMeasurementsHadError)';
   }
 
   @override
@@ -228,12 +311,28 @@ class _$_Initial implements _Initial {
             (identical(other.isButtonClicked, isButtonClicked) ||
                 const DeepCollectionEquality()
                     .equals(other.isButtonClicked, isButtonClicked)) &&
-            (identical(other.isDataReady, isDataReady) ||
+            (identical(other.isDataDownloaded, isDataDownloaded) ||
                 const DeepCollectionEquality()
-                    .equals(other.isDataReady, isDataReady)) &&
+                    .equals(other.isDataDownloaded, isDataDownloaded)) &&
             (identical(other.measurement, measurement) ||
                 const DeepCollectionEquality()
-                    .equals(other.measurement, measurement)));
+                    .equals(other.measurement, measurement)) &&
+            (identical(
+                    other.lastMeasurementsLoading, lastMeasurementsLoading) ||
+                const DeepCollectionEquality().equals(
+                    other.lastMeasurementsLoading, lastMeasurementsLoading)) &&
+            (identical(other.lastMeasurements, lastMeasurements) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastMeasurements, lastMeasurements)) &&
+            (identical(
+                    other.lastMeasurementsHadError, lastMeasurementsHadError) ||
+                const DeepCollectionEquality().equals(
+                    other.lastMeasurementsHadError,
+                    lastMeasurementsHadError)) &&
+            (identical(
+                    other.newMeasurementsHadError, newMeasurementsHadError) ||
+                const DeepCollectionEquality().equals(
+                    other.newMeasurementsHadError, newMeasurementsHadError)));
   }
 
   @override
@@ -243,8 +342,12 @@ class _$_Initial implements _Initial {
       const DeepCollectionEquality().hash(chosenStatistic) ^
       const DeepCollectionEquality().hash(chosenIndex) ^
       const DeepCollectionEquality().hash(isButtonClicked) ^
-      const DeepCollectionEquality().hash(isDataReady) ^
-      const DeepCollectionEquality().hash(measurement);
+      const DeepCollectionEquality().hash(isDataDownloaded) ^
+      const DeepCollectionEquality().hash(measurement) ^
+      const DeepCollectionEquality().hash(lastMeasurementsLoading) ^
+      const DeepCollectionEquality().hash(lastMeasurements) ^
+      const DeepCollectionEquality().hash(lastMeasurementsHadError) ^
+      const DeepCollectionEquality().hash(newMeasurementsHadError);
 
   @JsonKey(ignore: true)
   @override
@@ -260,25 +363,56 @@ class _$_Initial implements _Initial {
             List<bool> chosenStatistic,
             int chosenIndex,
             bool isButtonClicked,
-            bool isDataReady,
-            Measurement measurement),
+            bool isDataDownloaded,
+            Measurement measurement,
+            bool lastMeasurementsLoading,
+            List<Measurement> lastMeasurements,
+            bool lastMeasurementsHadError,
+            bool newMeasurementsHadError),
   }) {
     assert(initial != null);
-    return initial(title, chosenStatistic, chosenIndex, isButtonClicked,
-        isDataReady, measurement);
+    return initial(
+        title,
+        chosenStatistic,
+        chosenIndex,
+        isButtonClicked,
+        isDataDownloaded,
+        measurement,
+        lastMeasurementsLoading,
+        lastMeasurements,
+        lastMeasurementsHadError,
+        newMeasurementsHadError);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object>({
-    TResult initial(String title, List<bool> chosenStatistic, int chosenIndex,
-        bool isButtonClicked, bool isDataReady, Measurement measurement),
+    TResult initial(
+        String title,
+        List<bool> chosenStatistic,
+        int chosenIndex,
+        bool isButtonClicked,
+        bool isDataDownloaded,
+        Measurement measurement,
+        bool lastMeasurementsLoading,
+        List<Measurement> lastMeasurements,
+        bool lastMeasurementsHadError,
+        bool newMeasurementsHadError),
     @required TResult orElse(),
   }) {
     assert(orElse != null);
     if (initial != null) {
-      return initial(title, chosenStatistic, chosenIndex, isButtonClicked,
-          isDataReady, measurement);
+      return initial(
+          title,
+          chosenStatistic,
+          chosenIndex,
+          isButtonClicked,
+          isDataDownloaded,
+          measurement,
+          lastMeasurementsLoading,
+          lastMeasurements,
+          lastMeasurementsHadError,
+          newMeasurementsHadError);
     }
     return orElse();
   }
@@ -312,8 +446,12 @@ abstract class _Initial implements FrontScreenState {
       @required List<bool> chosenStatistic,
       @required int chosenIndex,
       @required bool isButtonClicked,
-      @required bool isDataReady,
-      @required Measurement measurement}) = _$_Initial;
+      @required bool isDataDownloaded,
+      @required Measurement measurement,
+      @required bool lastMeasurementsLoading,
+      @required List<Measurement> lastMeasurements,
+      @required bool lastMeasurementsHadError,
+      @required bool newMeasurementsHadError}) = _$_Initial;
 
   @override
   String get title;
@@ -324,9 +462,17 @@ abstract class _Initial implements FrontScreenState {
   @override
   bool get isButtonClicked;
   @override
-  bool get isDataReady;
+  bool get isDataDownloaded;
   @override
   Measurement get measurement;
+  @override
+  bool get lastMeasurementsLoading;
+  @override
+  List<Measurement> get lastMeasurements;
+  @override
+  bool get lastMeasurementsHadError;
+  @override
+  bool get newMeasurementsHadError;
   @override
   @JsonKey(ignore: true)
   _$InitialCopyWith<_Initial> get copyWith;

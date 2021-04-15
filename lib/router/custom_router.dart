@@ -4,6 +4,7 @@ import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
+import 'package:symptoms_monitor/domain/measurement/i_measurement_repsitory.dart';
 import 'package:symptoms_monitor/screens/history/profile_history.dart';
 import 'package:symptoms_monitor/screens/main/main_screen.dart';
 import 'package:symptoms_monitor/screens/profile/add_profiles.dart';
@@ -15,23 +16,13 @@ import '../inject.dart';
 class CustomRouter {
   Route onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
-
-
-
       case '/':
         return MaterialPageRoute(
-            builder: (_) =>  BlocProvider.value(
-        value: getIt<LoggedInCubit>(), child: Wrapper(),),);
-            
-      /*      
-            MultiBlocProvider(providers: [
-                  BlocProvider(
-                    create: (context) =>
-                        FrontScreenCubit()..prepareChosenStatisticList(),
-                  ),
-                ], child: MainScreen()));
-                */
-      
+          builder: (_) => BlocProvider.value(
+            value: getIt<LoggedInCubit>(),
+            child: Wrapper(),
+          ),
+        );
         break;
       case '/login':
         return MaterialPageRoute(
@@ -44,7 +35,18 @@ class CustomRouter {
                 value: getIt<AuthCubit>(), child: AuthScreen(isLogin: false)));
         break;
       case '/main':
-        return MaterialPageRoute(builder: (_) => MainScreen());
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => FrontScreenCubit(
+                    repository: getIt<IMeasurementRepository>())
+                  ..prepareChosenStatisticList(),
+              ),
+            ],
+            child: MainScreen(),
+          ),
+        );
         break;
       case '/add_profiles':
         return MaterialPageRoute(
