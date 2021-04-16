@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:symptoms_monitor/domain/registration/auth_failure.dart';
-import 'package:symptoms_monitor/models/profile/profile.dart';
 
 abstract class IAuthRepository {
   Future<Either<AuthFailure, Unit>> login(String email, String password);

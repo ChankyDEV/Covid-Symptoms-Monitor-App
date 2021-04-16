@@ -68,18 +68,22 @@ class ProfileRepository implements IProfileRepository {
     if (user.isSome()) {
       String uid = user.getOrElse(() => null).uid;
 
+      String userProfileID = "";
+
       final infoAboutAddingProfiles = await _firestore
           .collection('families')
           .doc(uid)
           .collection('profiles')
           .add(profile.toMap())
-          .then((value) => unit)
-          .catchError((onError) => ProfileFailure());
+          .then((value) {
+        userProfileID = value.id;
+        return unit;
+      }).catchError((onError) => ProfileFailure());
 
       if (infoAboutAddingProfiles is Unit) {
         if (profile.hasImage) {
-          final infoAboutImage = await _savePhotoToFirebase(profile, uid);
-
+          final infoAboutImage =
+              await _savePhotoToFirebase(profile, userProfileID);
           if (infoAboutImage.isRight()) {
             return right(unit);
           } else {
@@ -100,8 +104,19 @@ class ProfileRepository implements IProfileRepository {
     try {
       var ref = _storage.ref().child(uid).child('/${profile.name}');
       ref.putFile(File(profile.avatar.path));
-
       return right(unit);
+    } on FirebaseException catch (e) {
+      return left(ProfileFailure());
+    }
+  }
+
+  @override
+  Future<Either<ProfileFailure, String>> getPhotoFromFirebase(
+      String profileName, String uid) async {
+    try {
+      var ref = _storage.ref().child(uid).child(profileName);
+      String url = await ref.getDownloadURL();
+      return right(url);
     } on FirebaseException catch (e) {
       return left(ProfileFailure());
     }
@@ -124,7 +139,9 @@ class ProfileRepository implements IProfileRepository {
   List<Profile> _queryToProfiles(QuerySnapshot snapshot) {
     List<Profile> profiles = [];
     snapshot.docs.forEach((doc) {
-      profiles.add(Profile.fromMap(doc.data()));
+      Profile profile = Profile.fromMap(doc.data());
+      profile.uid = doc.id;
+      profiles.add(profile);
     });
     return profiles;
   }

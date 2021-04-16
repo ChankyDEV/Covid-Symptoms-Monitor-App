@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
 import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
@@ -72,7 +73,6 @@ class _ProfileSelectionState extends State<ProfileSelection> {
       }, (r) {
         profiles = r;
       });
-      print("data $profiles");
       if (profiles.isNotEmpty) {
         return Flexible(
           child: Padding(
@@ -85,35 +85,37 @@ class _ProfileSelectionState extends State<ProfileSelection> {
                 padding: EdgeInsets.all(15.0),
                 children: List.generate(
                   profiles.length,
-                  (index) => Column(
-                    children: [
-                      Container(
-                          color: Colors.black,
-                          child: Container(
-                            width: 130,
-                            height: 130,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: profiles[index]
-                                      .name
-                                      .toLowerCase()
-                                      .endsWith("a")
-                                  ? SvgPicture.asset('assets/images/dos.svg')
-                                  : SvgPicture.asset('assets/images/uno.svg'),
-                            ),
-                          )),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        profiles[index].name,
-                        style: TextStyle(fontSize: 15, color: Colors.white),
-                      )
-                    ],
+                  (index) => GestureDetector(
+                    onTap: () {
+                      Hive.box('User').put('current',profiles[index]);
+                      Navigator.pushNamed(context, "/main");
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                            color: Colors.black,
+                            child: Container(
+                              width: 130,
+                              height: 130,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: decidePicture(profiles[index].hasImage,
+                                    profiles[index].name, profiles[index].uid),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          profiles[index].name,
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                        )
+                      ],
+                    ),
                   ),
                 )),
           ),
@@ -123,6 +125,32 @@ class _ProfileSelectionState extends State<ProfileSelection> {
       }
     } else {
       return SizedBox();
+    }
+  }
+
+  Widget decidePicture(bool hasPicture, String name, String uid) {
+    if (hasPicture) {
+      return FutureBuilder(
+        future: getIt<IProfileRepository>().getPhotoFromFirebase(name, uid),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var data = snapshot.data;
+            return data.fold((l) {
+              return SizedBox();
+            }, (r) {
+              return Image.network(r);
+            });
+          } else {
+            return CircularProgressIndicator(
+              backgroundColor: Colors.black,
+            );
+          }
+        },
+      );
+    } else {
+      return name.toLowerCase().endsWith("a")
+          ? SvgPicture.asset('assets/images/dos.svg')
+          : SvgPicture.asset('assets/images/uno.svg');
     }
   }
 }

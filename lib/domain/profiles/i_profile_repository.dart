@@ -9,4 +9,6 @@ abstract class IProfileRepository {
   Future<Either<ProfileFailure, PickedFile>> getImage();
   void chooseProfile(Profile profile);
   Profile getActualProfile();
+  Future<Either<ProfileFailure, String>> getPhotoFromFirebase(
+      String profileName, String uid);
 }

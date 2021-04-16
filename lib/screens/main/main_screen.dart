@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
 import 'package:symptoms_monitor/screens/main/front_screen.dart';
 import 'package:symptoms_monitor/screens/main/side_menu.dart';
-
 import '../../inject.dart';
 
 class MainScreen extends StatefulWidget {

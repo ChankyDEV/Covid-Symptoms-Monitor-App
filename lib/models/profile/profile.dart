@@ -1,19 +1,31 @@
 import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 
+part 'profile.g.dart';
+
+@HiveType(typeId: 0)
 class Profile extends Equatable {
+  @HiveField(0)
   final String name;
+  @HiveField(1)
   final bool hasImage;
+  @HiveField(2)
   final Gender gender;
+  @HiveField(3)
   final PickedFile avatar;
+  @HiveField(4)
+  String uid;
 
   Profile(
-      {@required this.name, @required this.hasImage, this.gender, this.avatar});
+      {@required this.name,
+      @required this.hasImage,
+      this.gender,
+      this.avatar,
+      this.uid});
 
   @override
   List<Object> get props => [name, hasImage];
@@ -25,6 +37,7 @@ class Profile extends Equatable {
     return Profile(
       hasImage: false,
       name: '',
+      uid: '',
       gender: Gender.none,
     );
   }
@@ -42,10 +55,12 @@ class Profile extends Equatable {
   Profile copyWith({
     String name,
     bool hasImage,
+    String uid,
     PickedFile avatar,
   }) {
     return Profile(
       name: name ?? this.name,
+      uid: uid ?? this.uid,
       hasImage: hasImage ?? this.hasImage,
       gender: gender ?? this.gender,
       avatar: avatar ?? this.avatar,
@@ -56,6 +71,7 @@ class Profile extends Equatable {
     return {
       'name': name,
       'hasImage': hasImage,
+      'uid': uid,
       'gender': gender.toString(),
     };
   }
@@ -63,6 +79,7 @@ class Profile extends Equatable {
   factory Profile.fromMap(Map<String, dynamic> map) {
     return Profile(
       name: map['name'],
+      uid: map['uid'],
       hasImage: map['hasImage'],
       gender: _stringToGender(map['gender']),
     );

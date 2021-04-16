@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
+import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';
 
 class FrontScreen extends StatefulWidget {
@@ -19,6 +22,8 @@ class _FrontScreenState extends State<FrontScreen>
 
   @override
   void initState() {
+    Profile user = Hive.box("User").get("current");
+    print("USER ${user.uid}");
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
