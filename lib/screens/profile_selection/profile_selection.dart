@@ -28,6 +28,20 @@ class _ProfileSelectionState extends State<ProfileSelection> {
               appBar: AppBar(
                 elevation: 0,
                 backgroundColor: Colors.transparent,
+                actions: [
+                  IconButton(
+                    color: Color(0xff4F5563),
+                    icon: Container(
+                      child: Icon(
+                        Icons.ac_unit,
+                        size: 30,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/main');
+                    },
+                  )
+                ],
                 leading: IconButton(
                   color: Color(0xff4F5563),
                   icon: Container(

@@ -4,30 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
+import 'package:symptoms_monitor/models/measurement/measurement.dart';
+import 'package:symptoms_monitor/models/measurement/measurements_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';
+import 'package:symptoms_monitor/screens/core/utils.dart';
 
 class FrontScreen extends StatefulWidget {
   final Function startAnim;
-
   const FrontScreen({Key key, this.startAnim}) : super(key: key);
 
   @override
   _FrontScreenState createState() => _FrontScreenState();
 }
 
-class _FrontScreenState extends State<FrontScreen>
-    with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-
+class _FrontScreenState extends State<FrontScreen> {
+  final statisticsNames = ['Saturacja krwi', 'Tętno', 'Temperatura'];
+  final measurementsEnum = [
+    MeasurementsEnum.bloodSaturation,
+    MeasurementsEnum.heartRate,
+    MeasurementsEnum.temperature
+  ];
   @override
   void initState() {
     Profile user = Hive.box("User").get("current");
     print("USER ${user.uid}");
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
     super.initState();
   }
 
@@ -53,240 +54,91 @@ class _FrontScreenState extends State<FrontScreen>
               child: Column(
                 children: [
                   CircleButton(
-                    animateTitle: () {
+                    animateTitle: () async {
                       BlocProvider.of<FrontScreenCubit>(context)
-                          .clickOrReleaseButton();
-                      BlocProvider.of<FrontScreenCubit>(context).animateTitle();
-                      _animationController.forward();
+                          .getMeasurement();
                     },
                     clicked: state.isButtonClicked,
                     radius: radius,
                     title: state.title,
                   ),
-                  state.isDataReady
-                      ? Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  Text('Saturacja krwi'),
-                                  const SizedBox(
-                                    height: 7,
-                                  ),
-                                  Text('79%',
-                                      style: const TextStyle(fontSize: 20.0)),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 30,
-                              ),
-                              Column(
-                                children: [
-                                  Text('Tętno'),
-                                  const SizedBox(
-                                    height: 7,
-                                  ),
-                                  Text('74 BPM',
-                                      style: const TextStyle(fontSize: 20.0)),
-                                ],
-                              ),
-                              const SizedBox(
-                                width: 30,
-                              ),
-                              Column(
-                                children: [
-                                  Text('Temperatura'),
-                                  const SizedBox(
-                                    height: 7,
-                                  ),
-                                  Text('37.0 \u2103',
-                                      style: const TextStyle(fontSize: 20.0)),
-                                ],
-                              ),
-                            ],
-                          ))
-                      : Container(
-                          alignment: Alignment.center,
-                        ),
-                  state.isDataReady
-                      ? Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  _animationController.reverse();
-                                  BlocProvider.of<FrontScreenCubit>(context)
-                                      .clickOrReleaseButton();
-                                  BlocProvider.of<FrontScreenCubit>(context)
-                                      .resetTitle();
-                                },
-                                child: SaveButton(),
-                              ),
-                              const SizedBox(
-                                width: 40,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _animationController.reverse();
-                                  BlocProvider.of<FrontScreenCubit>(context)
-                                      .clickOrReleaseButton();
-                                  BlocProvider.of<FrontScreenCubit>(context)
-                                      .resetTitle();
-                                },
-                                child: DiscardButton(),
-                              )
-                            ],
-                          ),
-                        )
-                      : Container(
-                          alignment: Alignment.center,
-                        ),
+                  MeasurementResults(
+                      dataHasError: state.newMeasurementsHadError,
+                      isDataDownloaded: state.isDataDownloaded,
+                      onSave: () => BlocProvider.of<FrontScreenCubit>(context)
+                          .onSaveClick(),
+                      onDiscard: () =>
+                          BlocProvider.of<FrontScreenCubit>(context)
+                              .onDiscardClick(),
+                      actualMeasurement: state.measurement),
                   Expanded(
-                    child: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Container(
-                          width: width - 15,
-                          decoration: BoxDecoration(
+                    child: Container(
+                      width: width - 15,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16.0),
+                            topRight: Radius.circular(16.0)),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: Offset(0, 0),
                             color: Colors.transparent,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16.0),
-                                topRight: Radius.circular(16.0)),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: Offset(0, 0),
-                                color: Colors.transparent,
-                                spreadRadius: 2,
-                                blurRadius: 3,
-                              )
-                            ],
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: 6,
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: width / 1.1,
-                                    child: LineChartSample1(
-                                      chosenStat: state.chosenStatistic,
-                                    ),
-                                    // chosenStatistics[0]
-                                    //     ? Text('Saturacja')
-                                    //     : chosenStatistics[1]
-                                    //         ? Text('Tętno')
-                                    //         : Text('Temperatura'),
-                                  ),
+                            spreadRadius: 2,
+                            blurRadius: 3,
+                          )
+                        ],
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              flex: 6,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: width / 1.1,
+                                child: DataLineChart(
+                                  chosenStat: state.chosenStatistic,
+                                  lastMeasurementsLoading:
+                                      state.lastMeasurementsLoading,
+                                  lastMeasurementsHadError:
+                                      state.lastMeasurementsHadError,
+                                  titles: statisticsNames,
+                                  chosenIndex: state.chosenIndex,
+                                  measurements: state.lastMeasurements,
+                                  measurementsEnum: measurementsEnum,
                                 ),
-                                const SizedBox(
-                                  height: 12.0,
-                                ),
-                                Container(
-                                  width: width / 1.1,
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: Color(cBlueDark), width: 1),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(8.0))),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          child: GestureDetector(
-                                        onTap: () =>
-                                            BlocProvider.of<FrontScreenCubit>(
-                                                    context)
-                                                .switchChosenStatistic(0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: height / 17,
-                                          child: Text('Saturacja krwi',
-                                              style: state.chosenStatistic[0]
-                                                  ? TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500)
-                                                  : const TextStyle(
-                                                      color: Colors.black)),
-                                          decoration: BoxDecoration(
-                                            color: state.chosenStatistic[0]
-                                                ? Color(cBlueDark)
-                                                : Colors.transparent,
-                                            border: Border(
-                                                right: BorderSide(
-                                                    color: Color(cBlueDark),
-                                                    width: 1)),
-                                          ),
-                                        ),
-                                      )),
-                                      Expanded(
-                                          child: GestureDetector(
-                                        onTap: () =>
-                                            BlocProvider.of<FrontScreenCubit>(
-                                                    context)
-                                                .switchChosenStatistic(1),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: height / 17,
-                                          child: Text(
-                                            'Tętno',
-                                            style: state.chosenStatistic[1]
-                                                ? TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500)
-                                                : const TextStyle(
-                                                    color: Colors.black),
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: state.chosenStatistic[1]
-                                                ? Color(cBlueDark)
-                                                : Colors.transparent,
-                                            border: Border(
-                                                right: BorderSide(
-                                                    color: Color(cBlueDark),
-                                                    width: 1)),
-                                          ),
-                                        ),
-                                      )),
-                                      Expanded(
-                                          child: GestureDetector(
-                                        onTap: () =>
-                                            BlocProvider.of<FrontScreenCubit>(
-                                                    context)
-                                                .switchChosenStatistic(2),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          height: height / 17,
-                                          decoration: BoxDecoration(
-                                            color: state.chosenStatistic[2]
-                                                ? Color(cBlueDark)
-                                                : Colors.transparent,
-                                          ),
-                                          child: Text('Temperatura',
-                                              style: state.chosenStatistic[2]
-                                                  ? TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500)
-                                                  : const TextStyle(
-                                                      color: Colors.black)),
-                                        ),
-                                      )),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                            const SizedBox(
+                              height: 12.0,
+                            ),
+                            state.lastMeasurementsLoading
+                                ? Container(
+                                    width: width / 1.1,
+                                    height: height / 17,
+                                  )
+                                : state.lastMeasurementsHadError
+                                    ? Container(
+                                        width: width / 1.1,
+                                        height: height / 17,
+                                      )
+                                    : SwitchButton(
+                                        chosenStatistic: state.chosenStatistic,
+                                        length: state.chosenStatistic.length,
+                                        onItemChoose: (index) =>
+                                            BlocProvider.of<FrontScreenCubit>(
+                                                    context)
+                                                .switchChosenStatistic(index),
+                                        statisticsNames: [
+                                          'Saturacja Krwi',
+                                          'Tętno',
+                                          'Temperatura'
+                                        ],
+                                      ),
+                          ],
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -297,44 +149,339 @@ class _FrontScreenState extends State<FrontScreen>
   }
 }
 
-class SaveButton extends StatelessWidget {
+class MeasurementResults extends StatelessWidget {
+  final bool isDataDownloaded;
+  final bool dataHasError;
+  final Function onSave;
+  final Function onDiscard;
+  final Measurement actualMeasurement;
+  const MeasurementResults({
+    Key key,
+    @required this.isDataDownloaded,
+    @required this.onSave,
+    @required this.onDiscard,
+    @required this.actualMeasurement,
+    @required this.dataHasError,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      alignment: Alignment.center,
-      child: Text(
-        'Zapisz',
-        style: const TextStyle(color: Colors.white),
-      ),
-      decoration: BoxDecoration(
-          color: Color(cBlueDark),
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          )),
-    );
+    return isDataDownloaded
+        ? dataHasError
+            ? Container(
+                margin: const EdgeInsets.only(top: 40),
+                alignment: Alignment.bottomCenter,
+                child: Text('Wystąpił błąd podczas pobierania danych',
+                    style: const TextStyle(fontSize: 20.0)),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text('Saturacja krwi'),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Text(
+                                  '${actualMeasurement.bloodSaturation.value} %',
+                                  style: const TextStyle(fontSize: 20.0)),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Column(
+                            children: [
+                              Text('Tętno'),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Text('${actualMeasurement.heartRate.value} BPM',
+                                  style: const TextStyle(fontSize: 20.0)),
+                            ],
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Column(
+                            children: [
+                              Text('Temperatura'),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Text(
+                                  '${actualMeasurement.temperature.value} \u2103',
+                                  style: const TextStyle(fontSize: 20.0)),
+                            ],
+                          ),
+                        ],
+                      )),
+                  Container(
+                    margin: const EdgeInsets.only(top: 20),
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DarkBlueButton(
+                          onTap: onSave,
+                          title: 'Zapisz',
+                        ),
+                        const SizedBox(
+                          width: 40,
+                        ),
+                        TransparentButton(
+                          onTap: onDiscard,
+                          title: 'Odrzuć',
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+        : Container();
   }
 }
 
-class DiscardButton extends StatelessWidget {
+class DataLineChart extends StatefulWidget {
+  final List<bool> chosenStat;
+  final bool lastMeasurementsLoading;
+  final bool lastMeasurementsHadError;
+  final List<String> titles;
+  final int chosenIndex;
+  final List<Measurement> measurements;
+  final List<MeasurementsEnum> measurementsEnum;
+
+  const DataLineChart(
+      {Key key,
+      this.chosenStat,
+      this.lastMeasurementsLoading,
+      this.lastMeasurementsHadError,
+      this.titles,
+      this.chosenIndex,
+      this.measurements,
+      this.measurementsEnum})
+      : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => DataLineChartState();
+}
+
+class DataLineChartState extends State<DataLineChart> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      alignment: Alignment.center,
-      child: Text(
-        'Odrzuć',
-        style: const TextStyle(
-          color: Color(cBlueDark),
-        ),
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(8.0),
-          ),
-          border: Border.all(width: 2, color: Color(cBlueDark))),
+      height: height / 3,
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          color: Color(cBlueDark)),
+      child: widget.lastMeasurementsLoading
+          ? LoadingIndicator()
+          : widget.lastMeasurementsHadError
+              ? MakeRequestAgainErrorCard(
+                  message: 'Błąd w trakcie pobierania danych.\nPonów',
+                  reQuery: () => BlocProvider.of<FrontScreenCubit>(context)
+                      .getLastMeasurements(),
+                )
+              : Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: _renderTitle(
+                              isTitleChosen: widget.chosenStat,
+                              names: widget.titles),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(right: 24.0, left: 24.0),
+                            child: _renderChart(
+                                chosenIndex: widget.chosenIndex,
+                                measurements: widget.measurements,
+                                measurementsEnum: widget.measurementsEnum),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
     );
   }
+
+  Widget _renderChart(
+      {@required int chosenIndex,
+      List<Measurement> measurements,
+      List<MeasurementsEnum> measurementsEnum}) {
+    return LineChart(
+        chartData(
+            enumName: measurementsEnum[chosenIndex],
+            measurements: measurements),
+        swapAnimationDuration: const Duration(milliseconds: 250));
+  }
+
+  LineChartData chartData(
+      {@required MeasurementsEnum enumName,
+      @required List<Measurement> measurements}) {
+    var data = [];
+    List<DateTime> dates = [];
+    if (enumName == MeasurementsEnum.bloodSaturation) {
+      measurements.forEach((element) {
+        data.add(element.bloodSaturation.value);
+        dates.add(element.date);
+      });
+    } else if (enumName == MeasurementsEnum.heartRate) {
+      measurements.forEach((element) {
+        data.add(element.heartRate.value);
+        dates.add(element.date);
+      });
+    } else {
+      measurements.forEach((element) {
+        data.add(element.temperature.value);
+        dates.add(element.date);
+      });
+    }
+
+    dynamic max = data[0];
+    dynamic min = data[0];
+
+    data.forEach((value) {
+      if (max < value) {
+        max = value;
+      }
+      if (min > value) {
+        min = value;
+      }
+    });
+
+    return LineChartData(
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.black.withOpacity(0.8),
+        ),
+        touchCallback: (LineTouchResponse touchResponse) {},
+        handleBuiltInTouches: true,
+      ),
+      gridData: FlGridData(
+        show: false,
+      ),
+      titlesData: FlTitlesData(
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: measurements.length.toDouble(),
+          getTextStyles: (value) => const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+          margin: 15,
+          getTitles: (value) {
+            int i = value.toInt();
+            return '${dates[i].day}.${dates[i].month}';
+          },
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+          ),
+          reservedSize: 10,
+          interval: enumName == MeasurementsEnum.temperature ? 0.5 : 6,
+          margin: 15,
+          getTitles: (value) {
+            int i = value.toInt();
+            int differ = enumName == MeasurementsEnum.temperature ? 6 : 2;
+
+            return '$i';
+          },
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(
+            color: Colors.black,
+            width: 4,
+          ),
+          left: BorderSide(
+            color: Colors.black,
+            width: 4,
+          ),
+          right: BorderSide(
+            color: Colors.transparent,
+          ),
+          top: BorderSide(
+            color: Colors.transparent,
+          ),
+        ),
+      ),
+      minX: 0,
+      maxX: dates.length - 1.toDouble(),
+      maxY: max.toDouble(),
+      minY: (enumName == MeasurementsEnum.temperature ? -1 : -10) +
+          min.toDouble(),
+      lineBarsData: drawData(data: data),
+    );
+  }
+
+  List<LineChartBarData> drawData({List<dynamic> data}) {
+    List<FlSpot> spots = [];
+
+    for (int i = 0; i < data.length; i++) {
+      spots.add(FlSpot(i.toDouble(), data[i].toDouble()));
+    }
+    return [
+      LineChartBarData(
+        spots: spots,
+        isCurved: true,
+        colors: [
+          const Color(cBlueLight),
+        ],
+        barWidth: 3,
+        isStrokeCapRound: true,
+        dotData: FlDotData(
+          show: true,
+        ),
+        belowBarData: BarAreaData(
+          show: false,
+        ),
+      )
+    ];
+  }
+}
+
+Widget _renderTitle(
+    {@required List<bool> isTitleChosen, @required List<String> names}) {
+  for (int i = 0; i < names.length; i++) {
+    if (isTitleChosen[i] == true) {
+      return Text(
+        names[i],
+        style: const TextStyle(color: Colors.white, fontSize: 20.0),
+      );
+    }
+  }
+  return Container();
 }
 
 class CircleButton extends StatelessWidget {
@@ -369,7 +516,7 @@ class CircleButton extends StatelessWidget {
                 height: radius - 30,
                 child: Container(
                     alignment: Alignment.center,
-                    child: Text(clicked ? title : 'START',
+                    child: Text(title,
                         style: const TextStyle(
                           fontSize: 28.0,
                           fontWeight: FontWeight.bold,
@@ -394,209 +541,14 @@ class CircleButton extends StatelessWidget {
   }
 }
 
-class LineChartSample1 extends StatefulWidget {
-  final List<bool> chosenStat;
-
-  const LineChartSample1({Key key, this.chosenStat}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => LineChartSample1State();
-}
-
-class LineChartSample1State extends State<LineChartSample1> {
-  bool isShowingMainData;
-
-  @override
-  void initState() {
-    super.initState();
-    isShowingMainData = true;
-  }
-
+class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-      child: AspectRatio(
-        aspectRatio: 1.3,
-        child: Container(
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              color: Color(cBlueDark)),
-          child: Stack(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                      alignment: Alignment.center,
-                      child: Text(
-                          widget.chosenStat[0]
-                              ? 'Saturacja krwi'
-                              : widget.chosenStat[1]
-                                  ? 'Tetno'
-                                  : 'Temperatura',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 20.0))),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 36.0, left: 6.0),
-                      child: widget.chosenStat[0]
-                          ? LineChart(
-                              sampleData1(),
-                              swapAnimationDuration:
-                                  const Duration(milliseconds: 250),
-                            )
-                          : widget.chosenStat[1]
-                              ? LineChart(
-                                  sampleData1(),
-                                  swapAnimationDuration:
-                                      const Duration(milliseconds: 250),
-                                )
-                              : LineChart(
-                                  sampleData1(),
-                                  swapAnimationDuration:
-                                      const Duration(milliseconds: 250),
-                                ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+    return Container(
+      alignment: Alignment.center,
+      child: CircularProgressIndicator(
+        backgroundColor: Color(cBlueDark),
       ),
     );
-  }
-
-  LineChartData sampleData1() {
-    return LineChartData(
-      lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.black.withOpacity(0.8),
-        ),
-        touchCallback: (LineTouchResponse touchResponse) {},
-        handleBuiltInTouches: true,
-      ),
-      gridData: FlGridData(
-        show: false,
-      ),
-      titlesData: FlTitlesData(
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 25,
-          getTextStyles: (value) => const TextStyle(
-            color: Colors.white,
-            //fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          margin: 15,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '02.04';
-              case 2:
-                return '03.04';
-              case 3:
-                return '04.04';
-              case 4:
-                return '05.04';
-              case 5:
-                return '06.04';
-              case 6:
-                return '07.04';
-              case 7:
-                return '08.04';
-            }
-            return '';
-          },
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          getTextStyles: (value) => const TextStyle(
-            color: Colors.white,
-            //fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 35:
-                return '35';
-              case 37:
-                return '37';
-              case 39:
-                return '39';
-              case 41:
-                return '41';
-            }
-            return '';
-          },
-          margin: 15,
-          reservedSize: 25,
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: const Border(
-          bottom: BorderSide(
-            color: Colors.black,
-            width: 4,
-          ),
-          left: BorderSide(
-            color: Colors.black,
-            width: 4,
-          ),
-          right: BorderSide(
-            color: Colors.transparent,
-          ),
-          top: BorderSide(
-            color: Colors.transparent,
-          ),
-        ),
-      ),
-      minX: 1,
-      maxX: 7,
-      maxY: 41,
-      minY: 34,
-      lineBarsData: temperatureData(),
-    );
-  }
-
-  List<LineChartBarData> temperatureData() {
-    final LineChartBarData lineChartBarData1 = LineChartBarData(
-      spots: [
-        FlSpot(1, 35.9),
-        FlSpot(2, 36.6),
-        FlSpot(3, 37.1),
-        FlSpot(4, 38.9),
-        FlSpot(5, 36.6),
-        FlSpot(6, 37.3),
-        FlSpot(7, 35.5),
-      ],
-      isCurved: true,
-      colors: [
-        const Color(cBlueLight),
-      ],
-      barWidth: 3,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: true,
-      ),
-      belowBarData: BarAreaData(
-        show: false,
-      ),
-    );
-
-    return [
-      lineChartBarData1,
-    ];
   }
 }

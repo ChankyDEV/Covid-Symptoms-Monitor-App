@@ -43,7 +43,8 @@ class MeasurementRepository implements IMeasurementRepository {
   }
 
   @override
-  Future<Either<MeasurementFailure, List<Measurement>>> getLimited() async {
+  Future<Either<MeasurementFailure, List<Measurement>>> getLimited(
+      int limit) async {
     final user = await _getUser();
     String uid = user.getOrElse(() => null).uid;
     Profile profile = getIt<IProfileRepository>().getActualProfile();
@@ -52,9 +53,9 @@ class MeasurementRepository implements IMeasurementRepository {
       final infoAboutListOfMeasurements = await _firestore
           .collection('families')
           .doc(uid)
-          .collection('Anna')
+          .collection("Kamil") //profile.name
           .orderBy('date', descending: true)
-          .limit(5)
+          .limit(limit)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
           .catchError((onError) => MeasurementFailure());

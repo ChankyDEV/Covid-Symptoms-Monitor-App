@@ -7,7 +7,11 @@ abstract class FrontScreenState with _$FrontScreenState {
     @required List<bool> chosenStatistic,
     @required int chosenIndex,
     @required bool isButtonClicked,
-    @required bool isDataReady,
+    @required bool isDataDownloaded,
     @required Measurement measurement,
+    @required bool lastMeasurementsLoading,
+    @required List<Measurement> lastMeasurements,
+    @required bool lastMeasurementsHadError,
+    @required bool newMeasurementsHadError,
   }) = _Initial;
 }
