@@ -11,6 +11,7 @@ abstract class FrontScreenState with _$FrontScreenState {
     @required Measurement measurement,
     @required bool lastMeasurementsLoading,
     @required List<Measurement> lastMeasurements,
+    @required List<String> lastMeasurementsIDS,
     @required bool lastMeasurementsHadError,
     @required bool newMeasurementsHadError,
   }) = _Initial;

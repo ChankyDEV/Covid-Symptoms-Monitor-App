@@ -10,6 +10,7 @@ class MeasurementDTO implements Equatable {
   final double temperature;
   final int saturation;
   final String date;
+  String id;
 
   MeasurementDTO({
     this.pulse,
@@ -20,11 +21,10 @@ class MeasurementDTO implements Equatable {
 
   factory MeasurementDTO.toDomain(Measurement measurement) {
     return MeasurementDTO(
-        pulse: measurement.pulse.value,
-        temperature: measurement.temperature.value,
-        saturation: measurement.saturation.value,
-        //date: measurement.date.toString()
-        );
+      pulse: measurement.pulse.value,
+      temperature: measurement.temperature.value,
+      saturation: measurement.saturation.value,
+    );
   }
 
   factory MeasurementDTO.fromFirestore(DocumentSnapshot doc) {

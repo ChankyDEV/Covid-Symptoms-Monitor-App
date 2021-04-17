@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/add_profile/add_profile_cubit.dart';
 import 'package:symptoms_monitor/blocs/auth/auth_cubit.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';

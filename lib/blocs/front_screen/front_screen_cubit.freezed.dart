@@ -23,6 +23,7 @@ class _$FrontScreenStateTearOff {
       @required Measurement measurement,
       @required bool lastMeasurementsLoading,
       @required List<Measurement> lastMeasurements,
+      @required List<String> lastMeasurementsIDS,
       @required bool lastMeasurementsHadError,
       @required bool newMeasurementsHadError}) {
     return _Initial(
@@ -34,6 +35,7 @@ class _$FrontScreenStateTearOff {
       measurement: measurement,
       lastMeasurementsLoading: lastMeasurementsLoading,
       lastMeasurements: lastMeasurements,
+      lastMeasurementsIDS: lastMeasurementsIDS,
       lastMeasurementsHadError: lastMeasurementsHadError,
       newMeasurementsHadError: newMeasurementsHadError,
     );
@@ -54,6 +56,7 @@ mixin _$FrontScreenState {
   Measurement get measurement;
   bool get lastMeasurementsLoading;
   List<Measurement> get lastMeasurements;
+  List<String> get lastMeasurementsIDS;
   bool get lastMeasurementsHadError;
   bool get newMeasurementsHadError;
 
@@ -69,6 +72,7 @@ mixin _$FrontScreenState {
             Measurement measurement,
             bool lastMeasurementsLoading,
             List<Measurement> lastMeasurements,
+            List<String> lastMeasurementsIDS,
             bool lastMeasurementsHadError,
             bool newMeasurementsHadError),
   });
@@ -83,6 +87,7 @@ mixin _$FrontScreenState {
         Measurement measurement,
         bool lastMeasurementsLoading,
         List<Measurement> lastMeasurements,
+        List<String> lastMeasurementsIDS,
         bool lastMeasurementsHadError,
         bool newMeasurementsHadError),
     @required TResult orElse(),
@@ -115,6 +120,7 @@ abstract class $FrontScreenStateCopyWith<$Res> {
       Measurement measurement,
       bool lastMeasurementsLoading,
       List<Measurement> lastMeasurements,
+      List<String> lastMeasurementsIDS,
       bool lastMeasurementsHadError,
       bool newMeasurementsHadError});
 }
@@ -138,6 +144,7 @@ class _$FrontScreenStateCopyWithImpl<$Res>
     Object measurement = freezed,
     Object lastMeasurementsLoading = freezed,
     Object lastMeasurements = freezed,
+    Object lastMeasurementsIDS = freezed,
     Object lastMeasurementsHadError = freezed,
     Object newMeasurementsHadError = freezed,
   }) {
@@ -163,6 +170,9 @@ class _$FrontScreenStateCopyWithImpl<$Res>
       lastMeasurements: lastMeasurements == freezed
           ? _value.lastMeasurements
           : lastMeasurements as List<Measurement>,
+      lastMeasurementsIDS: lastMeasurementsIDS == freezed
+          ? _value.lastMeasurementsIDS
+          : lastMeasurementsIDS as List<String>,
       lastMeasurementsHadError: lastMeasurementsHadError == freezed
           ? _value.lastMeasurementsHadError
           : lastMeasurementsHadError as bool,
@@ -188,6 +198,7 @@ abstract class _$InitialCopyWith<$Res>
       Measurement measurement,
       bool lastMeasurementsLoading,
       List<Measurement> lastMeasurements,
+      List<String> lastMeasurementsIDS,
       bool lastMeasurementsHadError,
       bool newMeasurementsHadError});
 }
@@ -211,6 +222,7 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
     Object measurement = freezed,
     Object lastMeasurementsLoading = freezed,
     Object lastMeasurements = freezed,
+    Object lastMeasurementsIDS = freezed,
     Object lastMeasurementsHadError = freezed,
     Object newMeasurementsHadError = freezed,
   }) {
@@ -236,6 +248,9 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
       lastMeasurements: lastMeasurements == freezed
           ? _value.lastMeasurements
           : lastMeasurements as List<Measurement>,
+      lastMeasurementsIDS: lastMeasurementsIDS == freezed
+          ? _value.lastMeasurementsIDS
+          : lastMeasurementsIDS as List<String>,
       lastMeasurementsHadError: lastMeasurementsHadError == freezed
           ? _value.lastMeasurementsHadError
           : lastMeasurementsHadError as bool,
@@ -257,6 +272,7 @@ class _$_Initial implements _Initial {
       @required this.measurement,
       @required this.lastMeasurementsLoading,
       @required this.lastMeasurements,
+      @required this.lastMeasurementsIDS,
       @required this.lastMeasurementsHadError,
       @required this.newMeasurementsHadError})
       : assert(title != null),
@@ -267,6 +283,7 @@ class _$_Initial implements _Initial {
         assert(measurement != null),
         assert(lastMeasurementsLoading != null),
         assert(lastMeasurements != null),
+        assert(lastMeasurementsIDS != null),
         assert(lastMeasurementsHadError != null),
         assert(newMeasurementsHadError != null);
 
@@ -287,13 +304,15 @@ class _$_Initial implements _Initial {
   @override
   final List<Measurement> lastMeasurements;
   @override
+  final List<String> lastMeasurementsIDS;
+  @override
   final bool lastMeasurementsHadError;
   @override
   final bool newMeasurementsHadError;
 
   @override
   String toString() {
-    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataDownloaded: $isDataDownloaded, measurement: $measurement, lastMeasurementsLoading: $lastMeasurementsLoading, lastMeasurements: $lastMeasurements, lastMeasurementsHadError: $lastMeasurementsHadError, newMeasurementsHadError: $newMeasurementsHadError)';
+    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataDownloaded: $isDataDownloaded, measurement: $measurement, lastMeasurementsLoading: $lastMeasurementsLoading, lastMeasurements: $lastMeasurements, lastMeasurementsIDS: $lastMeasurementsIDS, lastMeasurementsHadError: $lastMeasurementsHadError, newMeasurementsHadError: $newMeasurementsHadError)';
   }
 
   @override
@@ -324,6 +343,9 @@ class _$_Initial implements _Initial {
             (identical(other.lastMeasurements, lastMeasurements) ||
                 const DeepCollectionEquality()
                     .equals(other.lastMeasurements, lastMeasurements)) &&
+            (identical(other.lastMeasurementsIDS, lastMeasurementsIDS) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastMeasurementsIDS, lastMeasurementsIDS)) &&
             (identical(
                     other.lastMeasurementsHadError, lastMeasurementsHadError) ||
                 const DeepCollectionEquality().equals(
@@ -346,6 +368,7 @@ class _$_Initial implements _Initial {
       const DeepCollectionEquality().hash(measurement) ^
       const DeepCollectionEquality().hash(lastMeasurementsLoading) ^
       const DeepCollectionEquality().hash(lastMeasurements) ^
+      const DeepCollectionEquality().hash(lastMeasurementsIDS) ^
       const DeepCollectionEquality().hash(lastMeasurementsHadError) ^
       const DeepCollectionEquality().hash(newMeasurementsHadError);
 
@@ -367,6 +390,7 @@ class _$_Initial implements _Initial {
             Measurement measurement,
             bool lastMeasurementsLoading,
             List<Measurement> lastMeasurements,
+            List<String> lastMeasurementsIDS,
             bool lastMeasurementsHadError,
             bool newMeasurementsHadError),
   }) {
@@ -380,6 +404,7 @@ class _$_Initial implements _Initial {
         measurement,
         lastMeasurementsLoading,
         lastMeasurements,
+        lastMeasurementsIDS,
         lastMeasurementsHadError,
         newMeasurementsHadError);
   }
@@ -396,6 +421,7 @@ class _$_Initial implements _Initial {
         Measurement measurement,
         bool lastMeasurementsLoading,
         List<Measurement> lastMeasurements,
+        List<String> lastMeasurementsIDS,
         bool lastMeasurementsHadError,
         bool newMeasurementsHadError),
     @required TResult orElse(),
@@ -411,6 +437,7 @@ class _$_Initial implements _Initial {
           measurement,
           lastMeasurementsLoading,
           lastMeasurements,
+          lastMeasurementsIDS,
           lastMeasurementsHadError,
           newMeasurementsHadError);
     }
@@ -450,6 +477,7 @@ abstract class _Initial implements FrontScreenState {
       @required Measurement measurement,
       @required bool lastMeasurementsLoading,
       @required List<Measurement> lastMeasurements,
+      @required List<String> lastMeasurementsIDS,
       @required bool lastMeasurementsHadError,
       @required bool newMeasurementsHadError}) = _$_Initial;
 
@@ -469,6 +497,8 @@ abstract class _Initial implements FrontScreenState {
   bool get lastMeasurementsLoading;
   @override
   List<Measurement> get lastMeasurements;
+  @override
+  List<String> get lastMeasurementsIDS;
   @override
   bool get lastMeasurementsHadError;
   @override

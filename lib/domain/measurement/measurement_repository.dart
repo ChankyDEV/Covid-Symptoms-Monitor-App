@@ -16,7 +16,7 @@ class MeasurementRepository implements IMeasurementRepository {
 
   @override
   Future<Either<MeasurementFailure, List<Measurement>>> getAll() async {
-    final user = await _getUser();
+    final user = _getUser();
     String uid = user.getOrElse(() => null).uid;
 
     String myID = Hive.box("User").get("current").uid;
@@ -28,7 +28,7 @@ class MeasurementRepository implements IMeasurementRepository {
           .collection('profiles')
           .doc(myID)
           .collection('measurement')
-          .orderBy('date', descending: true)
+          .orderBy('date', descending: false)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
           .catchError((onError) => null);
@@ -46,7 +46,7 @@ class MeasurementRepository implements IMeasurementRepository {
   @override
   Future<Either<MeasurementFailure, List<Measurement>>> getLimited(
       int limit) async {
-    final user = await _getUser();
+    final user = _getUser();
     String uid = user.getOrElse(() => null).uid;
     String myID = Hive.box("User").get("current").uid;
 
@@ -57,7 +57,7 @@ class MeasurementRepository implements IMeasurementRepository {
           .collection('profiles')
           .doc(myID)
           .collection('measurement')
-          .orderBy('date', descending: true)
+          .orderBy('date', descending: false)
           .limit(limit)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
@@ -73,11 +73,49 @@ class MeasurementRepository implements IMeasurementRepository {
     }
   }
 
+  void deleteMeasurement(String measurementID) async {
+    final user = _getUser();
+    String uid = user.getOrElse(() => null).uid;
+    String myID = Hive.box("User").get("current").uid;
+
+    if (user.isSome()) {
+      await _firestore
+          .collection('families')
+          .doc(uid)
+          .collection('profiles')
+          .doc(myID)
+          .collection('measurement')
+          .doc(measurementID)
+          .delete();
+    }
+  }
+
+  @override
+  Stream<List<Measurement>> streamLastData() {
+    final user = _getUser();
+    String uid = user.getOrElse(() => null).uid;
+    String myID = Hive.box("User").get("current").uid;
+
+    final streamData = _firestore
+        .collection('families')
+        .doc(uid)
+        .collection('profiles')
+        .doc(myID)
+        .collection('measurement')
+        .orderBy('date', descending: true)
+        .limit(1)
+        .snapshots()
+        .map((snapshot) => _fromFirebaseQuery(snapshot));
+
+    return streamData;
+  }
+
   List<Measurement> _fromFirebaseQuery(QuerySnapshot snapshot) {
     List<Measurement> measurements = [];
     snapshot.docs.forEach((doc) {
-      measurements
-          .add(Measurement.fromDomain(MeasurementDTO.fromFirestore(doc)));
+      MeasurementDTO dto = MeasurementDTO.fromFirestore(doc);
+      dto.id = doc.id;
+      measurements.add(Measurement.fromDomain(dto));
     });
     return measurements;
   }
@@ -85,7 +123,7 @@ class MeasurementRepository implements IMeasurementRepository {
   @override
   Future<Either<MeasurementFailure, Unit>> create(
       Measurement measurement) async {
-    final user = await _getUser();
+    final user = _getUser();
     String uid = user.getOrElse(() => null).uid;
     String myID = Hive.box("User").get("current").uid;
 
@@ -107,12 +145,12 @@ class MeasurementRepository implements IMeasurementRepository {
       } else {
         return left(MeasurementFailure());
       }
-    }else {
-        return left(MeasurementFailure());
-      }
+    } else {
+      return left(MeasurementFailure());
+    }
   }
 
-  Future<Option<User>> _getUser() async {
-    return await getIt<IAuthRepository>().getSignedInUser();
+  Option<User> _getUser() {
+    return getIt<IAuthRepository>().getSignedInUser();
   }
 }

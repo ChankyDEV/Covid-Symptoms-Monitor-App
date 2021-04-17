@@ -1,7 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
 import 'package:symptoms_monitor/models/measurement/measurements_enum.dart';

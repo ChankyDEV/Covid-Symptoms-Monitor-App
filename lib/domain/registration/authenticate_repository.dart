@@ -48,7 +48,7 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<Option<User>> getSignedInUser() async => optionOf(_auth.currentUser);
+  Option<User> getSignedInUser()  => optionOf(_auth.currentUser);
 
   @override
   Stream<User> onAuthStateChanged() {

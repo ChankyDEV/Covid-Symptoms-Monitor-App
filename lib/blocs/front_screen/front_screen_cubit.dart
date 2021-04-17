@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:symptoms_monitor/domain/measurement/i_measurement_repsitory.dart';
@@ -7,6 +8,7 @@ part 'front_screen_cubit.freezed.dart';
 
 class FrontScreenCubit extends Cubit<FrontScreenState> {
   final IMeasurementRepository repository;
+  StreamSubscription _streamSubscription;
 
   FrontScreenCubit({@required this.repository})
       : super(FrontScreenState.initial(
@@ -18,9 +20,19 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
           measurement: Measurement.empty(),
           lastMeasurementsLoading: false,
           lastMeasurements: [],
+          lastMeasurementsIDS: [],
           lastMeasurementsHadError: false,
           newMeasurementsHadError: false,
-        ));
+        )) {
+    _streamSubscription = repository.streamLastData().listen((event) {
+      Measurement measurement = event.first;
+      if (state.lastMeasurements.isNotEmpty) {
+        if (!state.lastMeasurementsIDS.contains(measurement.id)) {
+          getMeasurement(measurementInput: measurement);
+        }
+      }
+    });
+  }
 
   void prepareChosenStatisticList() {
     var chosenStats = state.chosenStatistic;
@@ -65,14 +77,18 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
     // save measurement in DB;
   }
 
-  void onDiscardClick() {
+  void onDiscardClick() async {
+    repository.deleteMeasurement(state.measurement.id);
     emit(state.copyWith(
+        lastMeasurements: state.lastMeasurements..remove(state.measurement),
+        lastMeasurementsIDS: state.lastMeasurementsIDS
+          ..remove(state.measurement.id),
         isButtonClicked: !state.isButtonClicked,
         isDataDownloaded: false,
-        title: 'START'));
+        title: 'Gotowe!'));
   }
 
-  void getMeasurement() async {
+  void getMeasurement({Measurement measurementInput}) async {
     String acquisition = 'Akwizycja...';
 
     clickOrReleaseButton();
@@ -85,17 +101,14 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
         title: title,
       ));
     }
-
-    final infoAboutListOfMeasurements = await repository.getLimited(1);
-
-    infoAboutListOfMeasurements.fold((failure) {
-      showErrorMessage();
-    }, (measurements) async {
-      showData(measurements: measurements);
-    });
+    if (measurementInput != null) {
+      showData(measurement: measurementInput);
+    }else{
+      // Mozna ustawic flage ze rozpoczecie pomiaru
+    }
   }
 
-  void showData({List<Measurement> measurements}) async {
+  void showData({Measurement measurement}) async {
     String ready = 'Gotowe!';
     String title = '';
     for (int i = 0; i < ready.length; i++) {
@@ -106,6 +119,9 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
       ));
     }
     emit(state.copyWith(
+      lastMeasurements: state.lastMeasurements..add(measurement),
+      lastMeasurementsIDS: state.lastMeasurementsIDS..add(measurement.id),
+      measurement: measurement,
       newMeasurementsHadError: false,
       isDataDownloaded: true,
     ));
@@ -121,39 +137,31 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
   }
 
   Future getLastMeasurements() async {
-    var allMeasurements = await repository.getAll();
-    List<Measurement> lastMeasurements;
-    allMeasurements.fold(
-        (l) => lastMeasurements = [], (r) => lastMeasurements = r);
-    print("siema $lastMeasurements");
-    emit(
-      state.copyWith(
-          lastMeasurementsLoading: false,
-          lastMeasurements: lastMeasurements),
-    );
-
-    /*
-
     final infoAboutListOfMeasurements = await repository.getLimited(10);
-
-    // Testing delay while downloading
-    await Future.delayed(Duration(seconds: 2));
 
     infoAboutListOfMeasurements.fold((failure) {
       emit(
         state.copyWith(
+          lastMeasurements: [],
           lastMeasurementsHadError: true,
-          lastMeasurementsLoading: !state.lastMeasurementsLoading,
+          lastMeasurementsLoading: false,
         ),
       );
     }, (measurements) {
+      final measurementsIDS = measurements.map((r) => r.id).toList();
       emit(
         state.copyWith(
           lastMeasurements: measurements,
-          lastMeasurementsLoading: !state.lastMeasurementsLoading,
+          lastMeasurementsIDS: measurementsIDS,
+          lastMeasurementsLoading: false,
         ),
       );
     });
-    */
+  }
+
+  @override
+  Future<void> close() {
+    _streamSubscription.cancel();
+    return super.close();
   }
 }
