@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:symptoms_monitor/models/measurement/blood_saturation.dart';
-import 'package:symptoms_monitor/models/measurement/heart_rate.dart';
+
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
+import 'package:symptoms_monitor/models/measurement/pulse.dart';
+import 'package:symptoms_monitor/models/measurement/saturation.dart';
 import 'package:symptoms_monitor/models/measurement/temperature.dart';
 import 'package:symptoms_monitor/screens/core/texts.dart';
 
@@ -16,33 +17,33 @@ class _ProfileHistoryState extends State<ProfileHistory> {
 
   final List<Measurement> measurements = [
     Measurement(
-      heartRate: HeartRate(value: 76),
+      pulse: Pulse(value: 76),
       temperature: Temperature(value: 36.6),
-      bloodSaturation: BloodSaturation(value: 94),
+      saturation: Saturation(value: 94),
     ),
     Measurement(
-      heartRate: HeartRate(value: 72),
+      pulse: Pulse(value: 72),
       temperature: Temperature(value: 37.1),
-      bloodSaturation: BloodSaturation(value: 85),
+      saturation: Saturation(value: 85),
     ),
     Measurement(
-      heartRate: HeartRate(value: 85),
+      pulse: Pulse(value: 85),
       temperature: Temperature(value: 36.7),
-      bloodSaturation: BloodSaturation(value: 96),
+      saturation: Saturation(value: 96),
     ),
     Measurement(
-      heartRate: HeartRate(value: 65),
+      pulse: Pulse(value: 65),
       temperature: Temperature(value: 38.7),
-      bloodSaturation: BloodSaturation(value: 54),
+      saturation: Saturation(value: 54),
     )
   ];
 
   bool isProper(Measurement measurement) {
     if (measurement.temperature.value >= 37.0 ||
         measurement.temperature.value < 35.0 ||
-        measurement.heartRate.value >= 100 ||
-        measurement.heartRate.value < 50 ||
-        measurement.bloodSaturation.value < 70) {
+        measurement.pulse.value >= 100 ||
+        measurement.pulse.value < 50 ||
+        measurement.saturation.value < 70) {
       return false;
     } else {
       return true;
@@ -50,8 +51,8 @@ class _ProfileHistoryState extends State<ProfileHistory> {
   }
 
   bool isProperValue(dynamic stat) {
-    if (stat is HeartRate) {
-      HeartRate heartRate = stat as HeartRate;
+    if (stat is Pulse) {
+      Pulse heartRate = stat as Pulse;
 
       if (heartRate.value > 100 || heartRate.value < 50) {
         return false;
@@ -65,7 +66,7 @@ class _ProfileHistoryState extends State<ProfileHistory> {
       }
       return true;
     } else {
-      BloodSaturation bloodSaturation = stat as BloodSaturation;
+      Saturation bloodSaturation = stat as Saturation;
       if (bloodSaturation.value <= 70.0) {
         return false;
       }
@@ -139,9 +140,9 @@ class _ProfileHistoryState extends State<ProfileHistory> {
         itemCount: measurements.length,
         itemBuilder: (context, index) {
           DateTime date = measurements[index].date;
-          HeartRate heartRate = measurements[index].heartRate;
+          Pulse heartRate = measurements[index].pulse;
           Temperature temperature = measurements[index].temperature;
-          BloodSaturation bloodSaturation = measurements[index].bloodSaturation;
+          Saturation bloodSaturation = measurements[index].saturation;
 
           return Card(
             child: Padding(

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +5,6 @@ import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/front_screen/front_screen_cubit.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
 import 'package:symptoms_monitor/models/measurement/measurements_enum.dart';
-import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';
 import 'package:symptoms_monitor/screens/core/utils.dart';
 
@@ -25,13 +23,6 @@ class _FrontScreenState extends State<FrontScreen> {
     MeasurementsEnum.heartRate,
     MeasurementsEnum.temperature
   ];
-  @override
-  void initState() {
-    Profile user = Hive.box("User").get("current");
-    print("USER ${user.uid}");
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -90,7 +81,7 @@ class _FrontScreenState extends State<FrontScreen> {
                       ),
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
-                        child: Column(
+                        child: state.lastMeasurements.isNotEmpty?Column(
                           children: [
                             Expanded(
                               flex: 6,
@@ -137,7 +128,7 @@ class _FrontScreenState extends State<FrontScreen> {
                                         ],
                                       ),
                           ],
-                        ),
+                        ):SizedBox(),
                       ),
                     ),
                   )
@@ -188,7 +179,7 @@ class MeasurementResults extends StatelessWidget {
                                 height: 7,
                               ),
                               Text(
-                                  '${actualMeasurement.bloodSaturation.value} %',
+                                  '${actualMeasurement.saturation.value} %',
                                   style: const TextStyle(fontSize: 20.0)),
                             ],
                           ),
@@ -201,7 +192,7 @@ class MeasurementResults extends StatelessWidget {
                               const SizedBox(
                                 height: 7,
                               ),
-                              Text('${actualMeasurement.heartRate.value} BPM',
+                              Text('${actualMeasurement.pulse.value} BPM',
                                   style: const TextStyle(fontSize: 20.0)),
                             ],
                           ),
@@ -291,7 +282,7 @@ class DataLineChartState extends State<DataLineChart> {
               ? MakeRequestAgainErrorCard(
                   message: 'Błąd w trakcie pobierania danych.\nPonów',
                   reQuery: () => BlocProvider.of<FrontScreenCubit>(context)
-                      .getLastMeasurements(),
+                      .getLastMeasurements(Hive.box("User").get("current").uid),
                 )
               : Stack(
                   children: [
@@ -348,12 +339,12 @@ class DataLineChartState extends State<DataLineChart> {
     List<DateTime> dates = [];
     if (enumName == MeasurementsEnum.bloodSaturation) {
       measurements.forEach((element) {
-        data.add(element.bloodSaturation.value);
+        data.add(element.saturation.value);
         dates.add(element.date);
       });
     } else if (enumName == MeasurementsEnum.heartRate) {
       measurements.forEach((element) {
-        data.add(element.heartRate.value);
+        data.add(element.pulse.value);
         dates.add(element.date);
       });
     } else {

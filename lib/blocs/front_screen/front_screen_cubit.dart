@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:symptoms_monitor/domain/measurement/i_measurement_repsitory.dart';
-import 'package:symptoms_monitor/models/measurement/blood_saturation.dart';
-import 'package:symptoms_monitor/models/measurement/heart_rate.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
-import 'package:symptoms_monitor/models/measurement/temperature.dart';
 
 part 'front_screen_state.dart';
 part 'front_screen_cubit.freezed.dart';
@@ -21,58 +18,7 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
           isDataDownloaded: false,
           measurement: Measurement.empty(),
           lastMeasurementsLoading: false,
-          lastMeasurements: [
-            Measurement(
-              heartRate: HeartRate(value: 74),
-              temperature: Temperature(value: 36.6),
-              bloodSaturation: BloodSaturation(value: 90),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 71),
-              temperature: Temperature(value: 37.6),
-              bloodSaturation: BloodSaturation(value: 95),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 82),
-              temperature: Temperature(value: 36.3),
-              bloodSaturation: BloodSaturation(value: 91),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 71),
-              temperature: Temperature(value: 37.2),
-              bloodSaturation: BloodSaturation(value: 95),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 104),
-              temperature: Temperature(value: 38.6),
-              bloodSaturation: BloodSaturation(value: 98),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 66),
-              temperature: Temperature(value: 39.2),
-              bloodSaturation: BloodSaturation(value: 56),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 74),
-              temperature: Temperature(value: 36.6),
-              bloodSaturation: BloodSaturation(value: 90),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 78),
-              temperature: Temperature(value: 37.9),
-              bloodSaturation: BloodSaturation(value: 92),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 70),
-              temperature: Temperature(value: 37.0),
-              bloodSaturation: BloodSaturation(value: 80),
-            ),
-            Measurement(
-              heartRate: HeartRate(value: 74),
-              temperature: Temperature(value: 36.6),
-              bloodSaturation: BloodSaturation(value: 90),
-            ),
-          ],
+          lastMeasurements: [],
           lastMeasurementsHadError: false,
           newMeasurementsHadError: false,
         ));
@@ -175,12 +121,19 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
     ));
   }
 
-  void getLastMeasurements() async {
+  Future getLastMeasurements(myID) async {
+    var allMeasurements = await repository.getAll(myID);
+    List<Measurement> lastMeasurements;
+    allMeasurements.fold(
+        (l) => lastMeasurements = [], (r) => lastMeasurements = r);
+    print("siema $lastMeasurements");
     emit(
       state.copyWith(
-        lastMeasurementsLoading: !state.lastMeasurementsLoading,
-      ),
+          lastMeasurementsLoading: false,
+          lastMeasurements: lastMeasurements),
     );
+
+    /*
 
     final infoAboutListOfMeasurements = await repository.getLimited(10);
 
@@ -202,5 +155,6 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
         ),
       );
     });
+    */
   }
 }

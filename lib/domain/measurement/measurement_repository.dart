@@ -16,21 +16,22 @@ class MeasurementRepository implements IMeasurementRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either<MeasurementFailure, List<Measurement>>> getAll() async {
+  Future<Either<MeasurementFailure, List<Measurement>>> getAll(
+      String myID) async {
     final user = await _getUser();
     String uid = user.getOrElse(() => null).uid;
 
-    Profile profile = getIt<IProfileRepository>().getActualProfile();
-
-    if (user.isSome() && !profile.isEmpty()) {
+    if (user.isSome()) {
       final infoAboutListOfMeasurements = await _firestore
           .collection('families')
           .doc(uid)
-          .collection(profile.name)
-          .orderBy('date', descending: true)
+          .collection('profiles')
+          .doc(myID)
+          .collection('measurement')
+          //.orderBy('date', descending: true)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
-          .catchError((onError) => MeasurementFailure());
+          .catchError((onError) => null);
 
       if (infoAboutListOfMeasurements is List<Measurement>) {
         return right(infoAboutListOfMeasurements);
@@ -73,8 +74,8 @@ class MeasurementRepository implements IMeasurementRepository {
   List<Measurement> _fromFirebaseQuery(QuerySnapshot snapshot) {
     List<Measurement> measurements = [];
     snapshot.docs.forEach((doc) {
-      measurements
-          .add(Measurement.fromDomain(MeasurementDTO.fromFirestore(doc)));
+       measurements
+        .add(Measurement.fromDomain(MeasurementDTO.fromFirestore(doc)));
     });
     return measurements;
   }

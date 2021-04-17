@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class HeartRate implements Equatable {
+class Pulse implements Equatable {
   final int value;
 
-  HeartRate({@required this.value});
+  Pulse({@required this.value});
 
   Map<String, dynamic> toMap() {
     return {
@@ -13,18 +13,18 @@ class HeartRate implements Equatable {
     };
   }
 
-  factory HeartRate.fromMap(Map<String, dynamic> map) {
+  factory Pulse.fromMap(Map<String, dynamic> map) {
     if (map == null) return null;
 
-    return HeartRate(
+    return Pulse(
       value: map['value'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory HeartRate.fromJson(String source) =>
-      HeartRate.fromMap(json.decode(source));
+  factory Pulse.fromJson(String source) =>
+      Pulse.fromMap(json.decode(source));
 
   @override
   List<Object> get props => [value];

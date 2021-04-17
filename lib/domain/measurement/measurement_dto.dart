@@ -2,27 +2,29 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
 
 class MeasurementDTO implements Equatable {
-  final int heartRate;
+  final int pulse;
   final double temperature;
-  final int bloodSaturation;
+  final int saturation;
   final String date;
 
   MeasurementDTO({
-    this.heartRate,
+    this.pulse,
     this.temperature,
-    this.bloodSaturation,
+    this.saturation,
     this.date,
   });
 
   factory MeasurementDTO.toDomain(Measurement measurement) {
     return MeasurementDTO(
-        heartRate: measurement.heartRate.value,
+        pulse: measurement.pulse.value,
         temperature: measurement.temperature.value,
-        bloodSaturation: measurement.bloodSaturation.value,
-        date: measurement.date.toString());
+        saturation: measurement.saturation.value,
+        //date: measurement.date.toString()
+        );
   }
 
   factory MeasurementDTO.fromFirestore(DocumentSnapshot doc) {
@@ -31,9 +33,9 @@ class MeasurementDTO implements Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'heartRate': heartRate,
+      'pulse': pulse,
       'temperature': temperature,
-      'bloodSaturation': bloodSaturation,
+      'saturation': saturation,
       'date': date,
     };
   }
@@ -42,9 +44,9 @@ class MeasurementDTO implements Equatable {
     if (map == null) return null;
 
     return MeasurementDTO(
-      heartRate: map['heartRate'],
+      pulse: map['pulse'],
       temperature: map['temperature'],
-      bloodSaturation: map['bloodSaturation'],
+      saturation: map['saturation'],
       date: map['date'],
     );
   }
@@ -55,8 +57,13 @@ class MeasurementDTO implements Equatable {
       MeasurementDTO.fromMap(json.decode(source));
 
   @override
-  List<Object> get props => [heartRate, temperature, bloodSaturation, date];
+  List<Object> get props => [pulse, temperature, saturation, date];
 
   @override
   bool get stringify => true;
+
+  @override
+  String toString() {
+    return 'MeasurementDTO(pulse: $pulse, temperature: $temperature, saturation: $saturation, date: $date)';
+  }
 }

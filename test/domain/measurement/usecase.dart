@@ -9,7 +9,7 @@ class GetAll {
   GetAll(this.repository);
 
   Future<Either<MeasurementFailure, List<Measurement>>> execute() async {
-    return await repository.getAll();
+    return await repository.getAll("A");
   }
 
   Future<Either<MeasurementFailure, Unit>> executeCreate(
@@ -18,6 +18,6 @@ class GetAll {
   }
 
   Future<Either<MeasurementFailure, List<Measurement>>> executeLimit() async {
-    return await repository.getLimited();
+    return await repository.getLimited(2);
   }
 }

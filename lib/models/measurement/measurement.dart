@@ -1,45 +1,48 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:symptoms_monitor/domain/measurement/measurement_dto.dart';
-import 'package:symptoms_monitor/models/measurement/blood_saturation.dart';
-import 'package:symptoms_monitor/models/measurement/heart_rate.dart';
+import 'package:symptoms_monitor/models/measurement/saturation.dart';
+import 'package:symptoms_monitor/models/measurement/pulse.dart';
 import 'package:symptoms_monitor/models/measurement/temperature.dart';
 
 class Measurement implements Equatable {
-  final HeartRate heartRate;
+  final Pulse pulse;
   final Temperature temperature;
-  final BloodSaturation bloodSaturation;
+  final Saturation saturation;
   final DateTime date;
 
   Measurement.withDate(
-      {@required this.heartRate,
+      {@required this.pulse,
       @required this.temperature,
-      @required this.bloodSaturation,
+      @required this.saturation,
       this.date});
 
   Measurement(
-      {@required this.heartRate,
+      {@required this.pulse,
       @required this.temperature,
-      @required this.bloodSaturation})
+      @required this.saturation})
       : this.date = DateTime.now();
 
   factory Measurement.fromDomain(MeasurementDTO measurement) {
     return Measurement.withDate(
-        heartRate: HeartRate(value: measurement.heartRate),
+        pulse: Pulse(value: measurement.pulse),
         temperature: Temperature(value: measurement.temperature),
-        bloodSaturation: BloodSaturation(value: measurement.bloodSaturation),
-        date: DateTime.parse(measurement.date));
+        saturation: Saturation(value: measurement.saturation),
+        date: DateFormat("yyyy.MM.dd HH:mm").parse(measurement.date)
+        
+        );
   }
   factory Measurement.empty() {
     return Measurement(
-      heartRate: HeartRate(value: 0),
+      pulse: Pulse(value: 0),
       temperature: Temperature(value: 0.0),
-      bloodSaturation: BloodSaturation(value: 0),
+      saturation: Saturation(value: 0),
     );
   }
 
   @override
-  List<Object> get props => [heartRate, temperature, bloodSaturation, date];
+  List<Object> get props => [pulse, temperature, saturation, date];
 
   @override
   bool get stringify => true;
