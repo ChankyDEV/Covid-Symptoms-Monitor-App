@@ -282,7 +282,7 @@ class DataLineChartState extends State<DataLineChart> {
               ? MakeRequestAgainErrorCard(
                   message: 'Błąd w trakcie pobierania danych.\nPonów',
                   reQuery: () => BlocProvider.of<FrontScreenCubit>(context)
-                      .getLastMeasurements(Hive.box("User").get("current").uid),
+                      .getLastMeasurements(),
                 )
               : Stack(
                   children: [

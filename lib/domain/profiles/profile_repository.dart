@@ -16,25 +16,7 @@ class ProfileRepository implements IProfileRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Profile _profile;
 
-  Profile get actualProfile {
-    return this._profile;
-  }
-
-  set actualProfile(Profile profile) {
-    this._profile = profile;
-  }
-
-  @override
-  void chooseProfile(Profile profile) {
-    actualProfile = profile;
-  }
-
-  @override
-  Profile getActualProfile() {
-    return actualProfile != null ? actualProfile : Profile.empty();
-  }
 
   @override
   Future<Either<ProfileFailure, List<Profile>>> getProfiles() async {

@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/measurement/i_measurement_repsitory.dart';
 import 'package:symptoms_monitor/domain/measurement/measurement_dto.dart';
 import 'package:symptoms_monitor/domain/measurement/measurement_failure.dart';
-import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
 import 'package:symptoms_monitor/domain/registration/i_authenticate_repository.dart';
 import 'package:symptoms_monitor/inject.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
-import 'package:symptoms_monitor/models/profile/profile.dart';
 
 @LazySingleton(as: IMeasurementRepository)
 class MeasurementRepository implements IMeasurementRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future<Either<MeasurementFailure, List<Measurement>>> getAll(
-      String myID) async {
+  Future<Either<MeasurementFailure, List<Measurement>>> getAll() async {
     final user = await _getUser();
     String uid = user.getOrElse(() => null).uid;
+
+    String myID = Hive.box("User").get("current").uid;
 
     if (user.isSome()) {
       final infoAboutListOfMeasurements = await _firestore
@@ -28,7 +28,7 @@ class MeasurementRepository implements IMeasurementRepository {
           .collection('profiles')
           .doc(myID)
           .collection('measurement')
-          //.orderBy('date', descending: true)
+          .orderBy('date', descending: true)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
           .catchError((onError) => null);
@@ -48,13 +48,15 @@ class MeasurementRepository implements IMeasurementRepository {
       int limit) async {
     final user = await _getUser();
     String uid = user.getOrElse(() => null).uid;
-    Profile profile = getIt<IProfileRepository>().getActualProfile();
+    String myID = Hive.box("User").get("current").uid;
 
-    if (user.isSome() && !profile.isEmpty()) {
+    if (user.isSome()) {
       final infoAboutListOfMeasurements = await _firestore
           .collection('families')
           .doc(uid)
-          .collection("Kamil") //profile.name
+          .collection('profiles')
+          .doc(myID)
+          .collection('measurement')
           .orderBy('date', descending: true)
           .limit(limit)
           .get()
@@ -74,8 +76,8 @@ class MeasurementRepository implements IMeasurementRepository {
   List<Measurement> _fromFirebaseQuery(QuerySnapshot snapshot) {
     List<Measurement> measurements = [];
     snapshot.docs.forEach((doc) {
-       measurements
-        .add(Measurement.fromDomain(MeasurementDTO.fromFirestore(doc)));
+      measurements
+          .add(Measurement.fromDomain(MeasurementDTO.fromFirestore(doc)));
     });
     return measurements;
   }
@@ -85,15 +87,17 @@ class MeasurementRepository implements IMeasurementRepository {
       Measurement measurement) async {
     final user = await _getUser();
     String uid = user.getOrElse(() => null).uid;
-    Profile profile = getIt<IProfileRepository>().getActualProfile();
+    String myID = Hive.box("User").get("current").uid;
 
     final measurementDTO = MeasurementDTO.toDomain(measurement);
 
-    if (user.isSome() && !profile.isEmpty()) {
+    if (user.isSome()) {
       final infoAboutCreatingMeasurement = await _firestore
           .collection('families')
           .doc(uid)
-          .collection(profile.name)
+          .collection('profiles')
+          .doc(myID)
+          .collection('measurement')
           .add(measurementDTO.toMap())
           .then((value) => unit)
           .catchError((onError) => MeasurementFailure());
@@ -103,7 +107,9 @@ class MeasurementRepository implements IMeasurementRepository {
       } else {
         return left(MeasurementFailure());
       }
-    }
+    }else {
+        return left(MeasurementFailure());
+      }
   }
 
   Future<Option<User>> _getUser() async {

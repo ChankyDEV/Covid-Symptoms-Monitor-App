@@ -42,7 +42,7 @@ class CustomRouter {
               BlocProvider(
                 create: (context) => FrontScreenCubit(
                     repository: getIt<IMeasurementRepository>())
-                  ..prepareChosenStatisticList()..getLastMeasurements(Hive.box("User").get("current").uid),
+                  ..prepareChosenStatisticList()..getLastMeasurements(),
               ),
             ],
             child: MainScreen(),

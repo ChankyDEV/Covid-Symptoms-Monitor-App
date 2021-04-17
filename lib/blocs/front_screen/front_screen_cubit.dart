@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:symptoms_monitor/domain/measurement/i_measurement_repsitory.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
-
 part 'front_screen_state.dart';
 part 'front_screen_cubit.freezed.dart';
 
@@ -121,8 +120,8 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
     ));
   }
 
-  Future getLastMeasurements(myID) async {
-    var allMeasurements = await repository.getAll(myID);
+  Future getLastMeasurements() async {
+    var allMeasurements = await repository.getAll();
     List<Measurement> lastMeasurements;
     allMeasurements.fold(
         (l) => lastMeasurements = [], (r) => lastMeasurements = r);

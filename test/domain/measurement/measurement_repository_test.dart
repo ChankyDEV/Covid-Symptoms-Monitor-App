@@ -29,13 +29,13 @@ void main() {
   ];
 
   test('should get list of measurements from repository', () async {
-    when(repository.getAll("a"))
+    when(repository.getAll())
         .thenAnswer((_) async => right(tListOfMeasurements));
 
     final result = await usecase.execute();
 
     expect(result, right(tListOfMeasurements));
-    verify(repository.getAll("A"));
+    verify(repository.getAll());
     verifyNoMoreInteractions(repository);
   });
 

@@ -7,8 +7,7 @@ abstract class IProfileRepository {
   Future<Either<ProfileFailure, Unit>> saveProfile(Profile profile);
   Future<Either<ProfileFailure, List<Profile>>> getProfiles();
   Future<Either<ProfileFailure, PickedFile>> getImage();
-  void chooseProfile(Profile profile);
-  Profile getActualProfile();
+
   Future<Either<ProfileFailure, String>> getPhotoFromFirebase(
       String profileName, String uid);
 }
