@@ -80,7 +80,7 @@ class _FrontScreenState extends State<FrontScreen> {
                       ),
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
-                        child: state.lastMeasurements.isNotEmpty?Column(
+                        child: Column(
                           children: [
                             Expanded(
                               flex: 6,
@@ -120,14 +120,10 @@ class _FrontScreenState extends State<FrontScreen> {
                                             BlocProvider.of<FrontScreenCubit>(
                                                     context)
                                                 .switchChosenStatistic(index),
-                                        statisticsNames: [
-                                          'Saturacja Krwi',
-                                          'Tętno',
-                                          'Temperatura'
-                                        ],
+                                        statisticsNames: statisticsNames,
                                       ),
                           ],
-                        ):SizedBox(),
+                        ),
                       ),
                     ),
                   )
@@ -159,9 +155,12 @@ class MeasurementResults extends StatelessWidget {
         ? dataHasError
             ? Container(
                 margin: const EdgeInsets.only(top: 40),
-                alignment: Alignment.bottomCenter,
-                child: Text('Wystąpił błąd podczas pobierania danych',
-                    style: const TextStyle(fontSize: 20.0)),
+                alignment: Alignment.center,
+                child: Text(
+                  'Wystąpił błąd podczas pobierania ostatniego pomiaru',
+                  style: const TextStyle(fontSize: 20.0),
+                  textAlign: TextAlign.center,
+                ),
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -177,8 +176,7 @@ class MeasurementResults extends StatelessWidget {
                               const SizedBox(
                                 height: 7,
                               ),
-                              Text(
-                                  '${actualMeasurement.saturation.value} %',
+                              Text('${actualMeasurement.saturation.value} %',
                                   style: const TextStyle(fontSize: 20.0)),
                             ],
                           ),

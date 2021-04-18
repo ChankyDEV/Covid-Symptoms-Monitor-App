@@ -85,7 +85,7 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
           ..remove(state.measurement.id),
         isButtonClicked: !state.isButtonClicked,
         isDataDownloaded: false,
-        title: 'Gotowe!'));
+        title: 'START'));
   }
 
   void getMeasurement({Measurement measurementInput}) async {
@@ -103,8 +103,8 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
     }
     if (measurementInput != null) {
       showData(measurement: measurementInput);
-    }else{
-      // Mozna ustawic flage ze rozpoczecie pomiaru
+    } else {
+      showErrorMessage();
     }
   }
 
@@ -137,6 +137,10 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
   }
 
   Future getLastMeasurements() async {
+    emit(state.copyWith(
+      lastMeasurementsLoading: true,
+    ));
+
     final infoAboutListOfMeasurements = await repository.getLimited(10);
 
     infoAboutListOfMeasurements.fold((failure) {
@@ -149,13 +153,23 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
       );
     }, (measurements) {
       final measurementsIDS = measurements.map((r) => r.id).toList();
-      emit(
-        state.copyWith(
-          lastMeasurements: measurements,
-          lastMeasurementsIDS: measurementsIDS,
-          lastMeasurementsLoading: false,
-        ),
-      );
+      if (measurements.isNotEmpty) {
+        emit(
+          state.copyWith(
+            lastMeasurements: measurements,
+            lastMeasurementsIDS: measurementsIDS,
+            lastMeasurementsLoading: false,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            lastMeasurements: [],
+            lastMeasurementsHadError: true,
+            lastMeasurementsLoading: false,
+          ),
+        );
+      }
     });
   }
 
