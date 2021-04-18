@@ -61,7 +61,7 @@ class MeasurementRepository implements IMeasurementRepository {
           .limit(limit)
           .get()
           .then((snapshot) => _fromFirebaseQuery(snapshot))
-          .catchError((onError) => MeasurementFailure());
+          .catchError((onError) => null);
 
       if (infoAboutListOfMeasurements is List<Measurement>) {
         return right(infoAboutListOfMeasurements);
@@ -113,6 +113,7 @@ class MeasurementRepository implements IMeasurementRepository {
   List<Measurement> _fromFirebaseQuery(QuerySnapshot snapshot) {
     List<Measurement> measurements = [];
     snapshot.docs.forEach((doc) {
+      
       MeasurementDTO dto = MeasurementDTO.fromFirestore(doc);
       dto.id = doc.id;
       measurements.add(Measurement.fromDomain(dto));

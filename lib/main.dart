@@ -5,7 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/app_config.dart';
 import 'package:symptoms_monitor/inject.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'models/profile/profile.dart';
 
 void main() async {

@@ -8,6 +8,7 @@ abstract class FrontScreenState with _$FrontScreenState {
     @required int chosenIndex,
     @required bool isButtonClicked,
     @required bool isDataDownloaded,
+    @required bool firstFetch,
     @required Measurement measurement,
     @required bool lastMeasurementsLoading,
     @required List<Measurement> lastMeasurements,

@@ -10,10 +10,12 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
   final IMeasurementRepository repository;
   StreamSubscription _streamSubscription;
 
+
   FrontScreenCubit({@required this.repository})
       : super(FrontScreenState.initial(
           chosenStatistic: List<bool>.filled(3, false),
           chosenIndex: 0,
+          firstFetch : false,
           isButtonClicked: false,
           title: 'START',
           isDataDownloaded: false,
@@ -26,7 +28,7 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
         )) {
     _streamSubscription = repository.streamLastData().listen((event) {
       Measurement measurement = event.first;
-      if (state.lastMeasurements.isNotEmpty) {
+      if (state.firstFetch) {
         if (!state.lastMeasurementsIDS.contains(measurement.id)) {
           getMeasurement(measurementInput: measurement);
         }
@@ -85,7 +87,7 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
           ..remove(state.measurement.id),
         isButtonClicked: !state.isButtonClicked,
         isDataDownloaded: false,
-        title: 'START'));
+        title: 'OCZEKUJE'));
   }
 
   void getMeasurement({Measurement measurementInput}) async {
@@ -98,14 +100,13 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
       await Future.delayed(Duration(milliseconds: 100));
       title += acquisition[i];
       emit(state.copyWith(
+              firstFetch : true,
         title: title,
       ));
     }
     if (measurementInput != null) {
       showData(measurement: measurementInput);
-    } else {
-      showErrorMessage();
-    }
+    } 
   }
 
   void showData({Measurement measurement}) async {

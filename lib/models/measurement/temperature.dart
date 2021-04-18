@@ -17,7 +17,7 @@ class Temperature implements Equatable {
     if (map == null) return null;
 
     return Temperature(
-      value: map['value'],
+      value: map['value'] as num,
     );
   }
 

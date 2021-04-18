@@ -37,15 +37,15 @@ class Measurement implements Equatable {
   }
   factory Measurement.empty() {
     return Measurement(
-      pulse: Pulse(value: 0),
+      pulse: Pulse(value: 0.0),
       id : "",
       temperature: Temperature(value: 0.0),
-      saturation: Saturation(value: 0),
+      saturation: Saturation(value: 0.0),
     );
   }
 
   @override
-  List<Object> get props => [pulse, temperature, saturation, date,id];
+  List<Object> get props => [pulse, temperature, saturation, date, id];
 
   @override
   bool get stringify => true;

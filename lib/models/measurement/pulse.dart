@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class Pulse implements Equatable {
-  final int value;
+  final double value;
 
   Pulse({@required this.value});
 
@@ -17,7 +17,7 @@ class Pulse implements Equatable {
     if (map == null) return null;
 
     return Pulse(
-      value: map['value'],
+      value: map['value'] as num,
     );
   }
 

@@ -20,6 +20,7 @@ class _$FrontScreenStateTearOff {
       @required int chosenIndex,
       @required bool isButtonClicked,
       @required bool isDataDownloaded,
+      @required bool firstFetch,
       @required Measurement measurement,
       @required bool lastMeasurementsLoading,
       @required List<Measurement> lastMeasurements,
@@ -32,6 +33,7 @@ class _$FrontScreenStateTearOff {
       chosenIndex: chosenIndex,
       isButtonClicked: isButtonClicked,
       isDataDownloaded: isDataDownloaded,
+      firstFetch: firstFetch,
       measurement: measurement,
       lastMeasurementsLoading: lastMeasurementsLoading,
       lastMeasurements: lastMeasurements,
@@ -53,6 +55,7 @@ mixin _$FrontScreenState {
   int get chosenIndex;
   bool get isButtonClicked;
   bool get isDataDownloaded;
+  bool get firstFetch;
   Measurement get measurement;
   bool get lastMeasurementsLoading;
   List<Measurement> get lastMeasurements;
@@ -69,6 +72,7 @@ mixin _$FrontScreenState {
             int chosenIndex,
             bool isButtonClicked,
             bool isDataDownloaded,
+            bool firstFetch,
             Measurement measurement,
             bool lastMeasurementsLoading,
             List<Measurement> lastMeasurements,
@@ -84,6 +88,7 @@ mixin _$FrontScreenState {
         int chosenIndex,
         bool isButtonClicked,
         bool isDataDownloaded,
+        bool firstFetch,
         Measurement measurement,
         bool lastMeasurementsLoading,
         List<Measurement> lastMeasurements,
@@ -117,6 +122,7 @@ abstract class $FrontScreenStateCopyWith<$Res> {
       int chosenIndex,
       bool isButtonClicked,
       bool isDataDownloaded,
+      bool firstFetch,
       Measurement measurement,
       bool lastMeasurementsLoading,
       List<Measurement> lastMeasurements,
@@ -141,6 +147,7 @@ class _$FrontScreenStateCopyWithImpl<$Res>
     Object chosenIndex = freezed,
     Object isButtonClicked = freezed,
     Object isDataDownloaded = freezed,
+    Object firstFetch = freezed,
     Object measurement = freezed,
     Object lastMeasurementsLoading = freezed,
     Object lastMeasurements = freezed,
@@ -161,6 +168,8 @@ class _$FrontScreenStateCopyWithImpl<$Res>
       isDataDownloaded: isDataDownloaded == freezed
           ? _value.isDataDownloaded
           : isDataDownloaded as bool,
+      firstFetch:
+          firstFetch == freezed ? _value.firstFetch : firstFetch as bool,
       measurement: measurement == freezed
           ? _value.measurement
           : measurement as Measurement,
@@ -195,6 +204,7 @@ abstract class _$InitialCopyWith<$Res>
       int chosenIndex,
       bool isButtonClicked,
       bool isDataDownloaded,
+      bool firstFetch,
       Measurement measurement,
       bool lastMeasurementsLoading,
       List<Measurement> lastMeasurements,
@@ -219,6 +229,7 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
     Object chosenIndex = freezed,
     Object isButtonClicked = freezed,
     Object isDataDownloaded = freezed,
+    Object firstFetch = freezed,
     Object measurement = freezed,
     Object lastMeasurementsLoading = freezed,
     Object lastMeasurements = freezed,
@@ -239,6 +250,8 @@ class __$InitialCopyWithImpl<$Res> extends _$FrontScreenStateCopyWithImpl<$Res>
       isDataDownloaded: isDataDownloaded == freezed
           ? _value.isDataDownloaded
           : isDataDownloaded as bool,
+      firstFetch:
+          firstFetch == freezed ? _value.firstFetch : firstFetch as bool,
       measurement: measurement == freezed
           ? _value.measurement
           : measurement as Measurement,
@@ -269,6 +282,7 @@ class _$_Initial implements _Initial {
       @required this.chosenIndex,
       @required this.isButtonClicked,
       @required this.isDataDownloaded,
+      @required this.firstFetch,
       @required this.measurement,
       @required this.lastMeasurementsLoading,
       @required this.lastMeasurements,
@@ -280,6 +294,7 @@ class _$_Initial implements _Initial {
         assert(chosenIndex != null),
         assert(isButtonClicked != null),
         assert(isDataDownloaded != null),
+        assert(firstFetch != null),
         assert(measurement != null),
         assert(lastMeasurementsLoading != null),
         assert(lastMeasurements != null),
@@ -298,6 +313,8 @@ class _$_Initial implements _Initial {
   @override
   final bool isDataDownloaded;
   @override
+  final bool firstFetch;
+  @override
   final Measurement measurement;
   @override
   final bool lastMeasurementsLoading;
@@ -312,7 +329,7 @@ class _$_Initial implements _Initial {
 
   @override
   String toString() {
-    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataDownloaded: $isDataDownloaded, measurement: $measurement, lastMeasurementsLoading: $lastMeasurementsLoading, lastMeasurements: $lastMeasurements, lastMeasurementsIDS: $lastMeasurementsIDS, lastMeasurementsHadError: $lastMeasurementsHadError, newMeasurementsHadError: $newMeasurementsHadError)';
+    return 'FrontScreenState.initial(title: $title, chosenStatistic: $chosenStatistic, chosenIndex: $chosenIndex, isButtonClicked: $isButtonClicked, isDataDownloaded: $isDataDownloaded, firstFetch: $firstFetch, measurement: $measurement, lastMeasurementsLoading: $lastMeasurementsLoading, lastMeasurements: $lastMeasurements, lastMeasurementsIDS: $lastMeasurementsIDS, lastMeasurementsHadError: $lastMeasurementsHadError, newMeasurementsHadError: $newMeasurementsHadError)';
   }
 
   @override
@@ -333,6 +350,9 @@ class _$_Initial implements _Initial {
             (identical(other.isDataDownloaded, isDataDownloaded) ||
                 const DeepCollectionEquality()
                     .equals(other.isDataDownloaded, isDataDownloaded)) &&
+            (identical(other.firstFetch, firstFetch) ||
+                const DeepCollectionEquality()
+                    .equals(other.firstFetch, firstFetch)) &&
             (identical(other.measurement, measurement) ||
                 const DeepCollectionEquality()
                     .equals(other.measurement, measurement)) &&
@@ -365,6 +385,7 @@ class _$_Initial implements _Initial {
       const DeepCollectionEquality().hash(chosenIndex) ^
       const DeepCollectionEquality().hash(isButtonClicked) ^
       const DeepCollectionEquality().hash(isDataDownloaded) ^
+      const DeepCollectionEquality().hash(firstFetch) ^
       const DeepCollectionEquality().hash(measurement) ^
       const DeepCollectionEquality().hash(lastMeasurementsLoading) ^
       const DeepCollectionEquality().hash(lastMeasurements) ^
@@ -387,6 +408,7 @@ class _$_Initial implements _Initial {
             int chosenIndex,
             bool isButtonClicked,
             bool isDataDownloaded,
+            bool firstFetch,
             Measurement measurement,
             bool lastMeasurementsLoading,
             List<Measurement> lastMeasurements,
@@ -401,6 +423,7 @@ class _$_Initial implements _Initial {
         chosenIndex,
         isButtonClicked,
         isDataDownloaded,
+        firstFetch,
         measurement,
         lastMeasurementsLoading,
         lastMeasurements,
@@ -418,6 +441,7 @@ class _$_Initial implements _Initial {
         int chosenIndex,
         bool isButtonClicked,
         bool isDataDownloaded,
+        bool firstFetch,
         Measurement measurement,
         bool lastMeasurementsLoading,
         List<Measurement> lastMeasurements,
@@ -434,6 +458,7 @@ class _$_Initial implements _Initial {
           chosenIndex,
           isButtonClicked,
           isDataDownloaded,
+          firstFetch,
           measurement,
           lastMeasurementsLoading,
           lastMeasurements,
@@ -474,6 +499,7 @@ abstract class _Initial implements FrontScreenState {
       @required int chosenIndex,
       @required bool isButtonClicked,
       @required bool isDataDownloaded,
+      @required bool firstFetch,
       @required Measurement measurement,
       @required bool lastMeasurementsLoading,
       @required List<Measurement> lastMeasurements,
@@ -491,6 +517,8 @@ abstract class _Initial implements FrontScreenState {
   bool get isButtonClicked;
   @override
   bool get isDataDownloaded;
+  @override
+  bool get firstFetch;
   @override
   Measurement get measurement;
   @override

@@ -6,9 +6,9 @@ import 'package:equatable/equatable.dart';
 import 'package:symptoms_monitor/models/measurement/measurement.dart';
 
 class MeasurementDTO implements Equatable {
-  final int pulse;
+  final double pulse;
   final double temperature;
-  final int saturation;
+  final double saturation;
   final String date;
   String id;
 
@@ -44,9 +44,9 @@ class MeasurementDTO implements Equatable {
     if (map == null) return null;
 
     return MeasurementDTO(
-      pulse: map['pulse'],
-      temperature: map['temperature'],
-      saturation: map['saturation'],
+      pulse: map['pulse'] as num,
+      temperature: map['temperature'] as num,
+      saturation: map['saturation'] as num,
       date: map['date'],
     );
   }
