@@ -19,10 +19,13 @@ class Wrapper extends StatelessWidget {
           unauthenticated: () => BlocProvider.value(
               value: getIt<AuthCubit>(), child: AuthScreen(isLogin: true)),
           login: (User user) => ProfileSelection(),
-          register: (User user) => BlocProvider.value(
-                value: getIt<AddProfileCubit>(),
-                child: AddProfiles(),
-              ));
+          register: (User user) {
+            Navigator.pop(context);
+            return BlocProvider.value(
+              value: getIt<AddProfileCubit>(),
+              child: AddProfiles(),
+            );
+          });
     });
   }
 }

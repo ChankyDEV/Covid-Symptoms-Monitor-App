@@ -11,145 +11,148 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
-      if (state.isCorrect) {
-        if (state.canGo) {
-          
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+          body: BlocConsumer<AuthCubit, AuthState>(listener: (context, state) {
+        if (state.isCorrect) {
+          if (state.canGo) {
+            
+          }
+        } else {
+          showError(context, state.errorText);
         }
-      } else {
-        showError(context, state.errorText);
-      }
-    }, builder: (context, state) {
-      return Material(
-        child: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/image.jpg'),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter)),
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.38),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
+      }, builder: (context, state) {
+        return Material(
+          child: SafeArea(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/image.jpg'),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter)),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(23, 10, 23, 23),
-                  child: ListView(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Covid-19 monitor",
-                              style: GoogleFonts.robotoSlab(
-                                textStyle: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ))
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, left: 5),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              isLogin ? 'Zaloguj się' : 'Zarejestruj się',
-                              style: GoogleFonts.robotoSlab(
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
+                Container(
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.38),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(23, 10, 23, 23),
+                    child: ListView(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Covid-19 monitor",
+                                style: GoogleFonts.robotoSlab(
+                                  textStyle: TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ))
                           ],
                         ),
-                      ),
-                      ...buildForms(isLogin, state, context),
-                      Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: MaterialButton(
-                          onPressed: () {
-                            isLogin
-                                ? context.read<AuthCubit>().login()
-                                : context.read<AuthCubit>().register();
-                          },
-                          child: Text(
-                            isLogin ? 'Logowanie' : 'Rejestracja',
-                            style: GoogleFonts.lato(
-                              textStyle: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, left: 5),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                isLogin ? 'Zaloguj się' : 'Zarejestruj się',
+                                style: GoogleFonts.robotoSlab(
+                                  textStyle: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ...buildForms(isLogin, state, context),
+                        Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: MaterialButton(
+                            onPressed: () {
+                              isLogin
+                                  ? context.read<AuthCubit>().login()
+                                  : context.read<AuthCubit>().register();
+                            },
+                            child: Text(
+                              isLogin ? 'Logowanie' : 'Rejestracja',
+                              style: GoogleFonts.lato(
+                                textStyle: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            color: Color(0xff29486A),
+                            elevation: 0,
+                            minWidth: 400,
+                            height: 50,
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 30),
+                          child: GestureDetector(
+                            onTap: () {
+                              isLogin
+                                  ? Navigator.of(context).pushNamed('/register')
+                                  : Navigator.of(context).pushNamed('/login');
+                            },
+                            child: Center(
+                              child: RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text: !isLogin
+                                        ? "Masz już konto?"
+                                        : "Nie masz konta?",
+                                    style: GoogleFonts.robotoSlab(
+                                      textStyle: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: !isLogin
+                                        ? " Zaloguj się"
+                                        : "  Zarejestruj się",
+                                    style: GoogleFonts.robotoSlab(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff29486A),
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  )
+                                ]),
                               ),
                             ),
                           ),
-                          color: Color(0xff29486A),
-                          elevation: 0,
-                          minWidth: 400,
-                          height: 50,
-                          textColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: GestureDetector(
-                          onTap: () {
-                            isLogin
-                                ? Navigator.of(context).pushNamed('/register')
-                                : Navigator.of(context).pushNamed('/login');
-                          },
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: !isLogin
-                                      ? "Masz już konto?"
-                                      : "Nie masz konta?",
-                                  style: GoogleFonts.robotoSlab(
-                                    textStyle: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: !isLogin
-                                      ? " Zaloguj się"
-                                      : "  Zarejestruj się",
-                                  style: GoogleFonts.robotoSlab(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xff29486A),
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                )
-                              ]),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 
   List<Widget> buildForms(bool isLogin, AuthState state, BuildContext context) {

@@ -11,6 +11,8 @@ import 'new_profile_form.dart';
 class AddProfiles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
+  print("kurwa");
     return BlocConsumer<AddProfileCubit, AddProfileState>(
       listener: (context, state) {
         if (state.showError) {

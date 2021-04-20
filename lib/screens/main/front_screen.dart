@@ -43,6 +43,9 @@ class _FrontScreenState extends State<FrontScreen> {
             return Container(
               child: Column(
                 children: [
+                  SizedBox(
+                    height: 20,
+                  ),
                   CircleButton(
                     animateTitle: () async {
                       BlocProvider.of<FrontScreenCubit>(context)
@@ -123,6 +126,7 @@ class _FrontScreenState extends State<FrontScreen> {
                                                     context)
                                                 .switchChosenStatistic(index),
                                         statisticsNames: statisticsNames,
+                                        index: state.chosenIndex,
                                       ),
                             const SizedBox(
                               height: 60.0,
@@ -273,24 +277,24 @@ class DataLineChartState extends State<DataLineChart> {
   Color decideChartColor(int index) {
     switch (index) {
       case 0:
-        return Colors.black;
+        return Color(0xff5E4A61);
       case 1:
-        return Colors.blue;
+        return Color(0xff6F9A65);
       case 2:
-        return Colors.red;
+        return Color(0xff925151);
       default:
         return Colors.green;
     }
   }
 
-    Color decideChartLinesColor(int index) {
+  Color decideChartLinesColor(int index) {
     switch (index) {
       case 0:
-        return Colors.blue;
+        return Color(0xff7BA5DC);
       case 1:
-        return Colors.red;
+        return Color(0xffED9696);
       case 2:
-        return Colors.green;
+        return Colors.white;
       default:
         return Colors.green;
     }
@@ -301,7 +305,7 @@ class DataLineChartState extends State<DataLineChart> {
     final height = MediaQuery.of(context).size.height;
     return Container(
       height: height / 3,
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           color: decideChartColor(widget.chosenIndex)),
       child: widget.lastMeasurementsLoading
@@ -355,7 +359,7 @@ class DataLineChartState extends State<DataLineChart> {
       List<MeasurementsEnum> measurementsEnum}) {
     return LineChart(
         chartData(
-          chosenIndex: chosenIndex,
+            chosenIndex: chosenIndex,
             enumName: measurementsEnum[chosenIndex],
             measurements: measurements),
         swapAnimationDuration: const Duration(milliseconds: 250));
@@ -363,7 +367,7 @@ class DataLineChartState extends State<DataLineChart> {
 
   LineChartData chartData(
       {@required int chosenIndex,
-        @required MeasurementsEnum enumName,
+      @required MeasurementsEnum enumName,
       @required List<Measurement> measurements}) {
     var data = [];
     List<DateTime> dates = [];
@@ -462,11 +466,12 @@ class DataLineChartState extends State<DataLineChart> {
       maxY: max.toDouble(),
       minY: (enumName == MeasurementsEnum.temperature ? -1 : -10) +
           min.toDouble(),
-      lineBarsData: drawData(data: data,chosenIndex: chosenIndex),
+      lineBarsData: drawData(data: data, chosenIndex: chosenIndex),
     );
   }
 
-  List<LineChartBarData> drawData({List<dynamic> data,@required int chosenIndex}) {
+  List<LineChartBarData> drawData(
+      {List<dynamic> data, @required int chosenIndex}) {
     List<FlSpot> spots = [];
 
     for (int i = 0; i < data.length; i++) {
@@ -476,9 +481,7 @@ class DataLineChartState extends State<DataLineChart> {
       LineChartBarData(
         spots: spots,
         isCurved: true,
-        colors: [
-         decideChartLinesColor(chosenIndex)
-        ],
+        colors: [decideChartLinesColor(chosenIndex)],
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: FlDotData(

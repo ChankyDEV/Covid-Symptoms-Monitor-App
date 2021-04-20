@@ -44,6 +44,7 @@ class SwitchButton extends StatelessWidget {
   final List<bool> chosenStatistic;
   final List<String> statisticsNames;
   final int length;
+  final int index;
   final Function(int) onItemChoose;
 
   const SwitchButton(
@@ -51,6 +52,7 @@ class SwitchButton extends StatelessWidget {
       this.chosenStatistic,
       this.statisticsNames,
       this.length,
+      this.index,
       this.onItemChoose})
       : super(key: key);
 
@@ -68,6 +70,7 @@ class SwitchButton extends StatelessWidget {
       child: renderSwitchButton(
           context: context,
           length: length,
+          index: index,
           names: statisticsNames,
           chosenStatistic: chosenStatistic,
           onItemChoose: onItemChoose),
@@ -78,10 +81,24 @@ class SwitchButton extends StatelessWidget {
 Widget renderSwitchButton(
     {@required BuildContext context,
     @required int length,
+    final int index,
     @required List<String> names,
     @required List<bool> chosenStatistic,
     @required Function(int) onItemChoose}) {
   List<Widget> items = new List<Widget>();
+
+  Color decideButtonColor(int index) {
+    switch (index) {
+      case 0:
+        return  Color(0xff5E4A61);
+      case 1:
+        return Color(0xff6F9A65);
+      case 2:
+        return Color(0xff925151);
+      default:
+        return Colors.green;
+    }
+  }
 
   for (int i = 0; i < length; i++) {
     items.add(
@@ -96,7 +113,9 @@ Widget renderSwitchButton(
                         color: Colors.white, fontWeight: FontWeight.w500)
                     : const TextStyle(color: Colors.black)),
             decoration: BoxDecoration(
-              color: chosenStatistic[i] ? Colors.red : Colors.transparent,
+              color: chosenStatistic[i]
+                  ? decideButtonColor(index)
+                  : Colors.transparent,
               border:
                   Border(right: BorderSide(color: Color(cBlueDark), width: 1)),
             ),

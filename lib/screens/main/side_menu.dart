@@ -52,10 +52,12 @@ class SideMenu extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 24.0,
+              height: 104.0,
             ),
             TextButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/profile_selection');
+                },
                 icon: Icon(
                   Icons.swap_horizontal_circle_outlined,
                   color: Colors.white,
@@ -74,28 +76,6 @@ class SideMenu extends StatelessWidget {
                 ),
                 label: Text(
                   'Historia',
-                  style: const TextStyle(color: Colors.white),
-                )),
-            TextButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.info_outline,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Więcej informacji',
-                  style: const TextStyle(color: Colors.white),
-                )),
-            TextButton.icon(
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/add_profiles');
-                },
-                icon: Icon(
-                  Icons.aspect_ratio,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Tworzenie profili - testowo',
                   style: const TextStyle(color: Colors.white),
                 )),
             Expanded(
