@@ -16,8 +16,6 @@ class ProfileRepository implements IProfileRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-
-
   @override
   Future<Either<ProfileFailure, List<Profile>>> getProfiles() async {
     var user = await getIt<IAuthRepository>().getSignedInUser();
@@ -84,7 +82,7 @@ class ProfileRepository implements IProfileRepository {
   Future<Either<ProfileFailure, Unit>> _savePhotoToFirebase(
       Profile profile, String uid) async {
     try {
-      var ref = _storage.ref().child(uid).child('/${profile.name}');
+      var ref = _storage.ref().child(uid);
       ref.putFile(File(profile.avatar.path));
       return right(unit);
     } on FirebaseException catch (e) {
