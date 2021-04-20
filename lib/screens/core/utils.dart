@@ -96,7 +96,7 @@ Widget renderSwitchButton(
                         color: Colors.white, fontWeight: FontWeight.w500)
                     : const TextStyle(color: Colors.black)),
             decoration: BoxDecoration(
-              color: chosenStatistic[i] ? Color(cBlueDark) : Colors.transparent,
+              color: chosenStatistic[i] ? Colors.red : Colors.transparent,
               border:
                   Border(right: BorderSide(color: Color(cBlueDark), width: 1)),
             ),

@@ -82,8 +82,10 @@ class _FrontScreenState extends State<FrontScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
+                            const SizedBox(
+                              height: 20.0,
+                            ),
                             Expanded(
-                              flex: 6,
                               child: Container(
                                 alignment: Alignment.center,
                                 width: width / 1.1,
@@ -122,6 +124,9 @@ class _FrontScreenState extends State<FrontScreen> {
                                                 .switchChosenStatistic(index),
                                         statisticsNames: statisticsNames,
                                       ),
+                            const SizedBox(
+                              height: 60.0,
+                            ),
                           ],
                         ),
                       ),
@@ -265,14 +270,40 @@ class DataLineChartState extends State<DataLineChart> {
     super.initState();
   }
 
+  Color decideChartColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.black;
+      case 1:
+        return Colors.blue;
+      case 2:
+        return Colors.red;
+      default:
+        return Colors.green;
+    }
+  }
+
+    Color decideChartLinesColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.blue;
+      case 1:
+        return Colors.red;
+      case 2:
+        return Colors.green;
+      default:
+        return Colors.green;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Container(
       height: height / 3,
-      decoration: const BoxDecoration(
+      decoration:  BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Color(cBlueDark)),
+          color: decideChartColor(widget.chosenIndex)),
       child: widget.lastMeasurementsLoading
           ? LoadingIndicator()
           : widget.lastMeasurementsHadError
@@ -296,7 +327,7 @@ class DataLineChartState extends State<DataLineChart> {
                               names: widget.titles),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 25,
                         ),
                         Expanded(
                           child: Padding(
@@ -309,7 +340,7 @@ class DataLineChartState extends State<DataLineChart> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 20,
                         ),
                       ],
                     ),
@@ -324,13 +355,15 @@ class DataLineChartState extends State<DataLineChart> {
       List<MeasurementsEnum> measurementsEnum}) {
     return LineChart(
         chartData(
+          chosenIndex: chosenIndex,
             enumName: measurementsEnum[chosenIndex],
             measurements: measurements),
         swapAnimationDuration: const Duration(milliseconds: 250));
   }
 
   LineChartData chartData(
-      {@required MeasurementsEnum enumName,
+      {@required int chosenIndex,
+        @required MeasurementsEnum enumName,
       @required List<Measurement> measurements}) {
     var data = [];
     List<DateTime> dates = [];
@@ -429,11 +462,11 @@ class DataLineChartState extends State<DataLineChart> {
       maxY: max.toDouble(),
       minY: (enumName == MeasurementsEnum.temperature ? -1 : -10) +
           min.toDouble(),
-      lineBarsData: drawData(data: data),
+      lineBarsData: drawData(data: data,chosenIndex: chosenIndex),
     );
   }
 
-  List<LineChartBarData> drawData({List<dynamic> data}) {
+  List<LineChartBarData> drawData({List<dynamic> data,@required int chosenIndex}) {
     List<FlSpot> spots = [];
 
     for (int i = 0; i < data.length; i++) {
@@ -444,7 +477,7 @@ class DataLineChartState extends State<DataLineChart> {
         spots: spots,
         isCurved: true,
         colors: [
-          const Color(cBlueLight),
+         decideChartLinesColor(chosenIndex)
         ],
         barWidth: 3,
         isStrokeCapRound: true,

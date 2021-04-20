@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 class Saturation implements Equatable {
-  final double value;
+  final num value;
 
   Saturation({@required this.value});
 

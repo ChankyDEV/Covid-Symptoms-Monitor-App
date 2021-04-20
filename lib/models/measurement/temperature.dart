@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class Temperature implements Equatable {
-  final double value;
+  final num value;
 
   Temperature({@required this.value});
 
@@ -17,7 +17,7 @@ class Temperature implements Equatable {
     if (map == null) return null;
 
     return Temperature(
-      value: map['value'] as num,
+      value: map['value'],
     );
   }
 
