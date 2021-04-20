@@ -283,7 +283,7 @@ class DataLineChartState extends State<DataLineChart> {
     }
   }
 
-    Color decideChartLinesColor(int index) {
+  Color decideChartLinesColor(int index) {
     switch (index) {
       case 0:
         return Colors.blue;
@@ -301,7 +301,7 @@ class DataLineChartState extends State<DataLineChart> {
     final height = MediaQuery.of(context).size.height;
     return Container(
       height: height / 3,
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
           color: decideChartColor(widget.chosenIndex)),
       child: widget.lastMeasurementsLoading
@@ -355,7 +355,7 @@ class DataLineChartState extends State<DataLineChart> {
       List<MeasurementsEnum> measurementsEnum}) {
     return LineChart(
         chartData(
-          chosenIndex: chosenIndex,
+            chosenIndex: chosenIndex,
             enumName: measurementsEnum[chosenIndex],
             measurements: measurements),
         swapAnimationDuration: const Duration(milliseconds: 250));
@@ -363,7 +363,7 @@ class DataLineChartState extends State<DataLineChart> {
 
   LineChartData chartData(
       {@required int chosenIndex,
-        @required MeasurementsEnum enumName,
+      @required MeasurementsEnum enumName,
       @required List<Measurement> measurements}) {
     var data = [];
     List<DateTime> dates = [];
@@ -462,11 +462,12 @@ class DataLineChartState extends State<DataLineChart> {
       maxY: max.toDouble(),
       minY: (enumName == MeasurementsEnum.temperature ? -1 : -10) +
           min.toDouble(),
-      lineBarsData: drawData(data: data,chosenIndex: chosenIndex),
+      lineBarsData: drawData(data: data, chosenIndex: chosenIndex),
     );
   }
 
-  List<LineChartBarData> drawData({List<dynamic> data,@required int chosenIndex}) {
+  List<LineChartBarData> drawData(
+      {List<dynamic> data, @required int chosenIndex}) {
     List<FlSpot> spots = [];
 
     for (int i = 0; i < data.length; i++) {
@@ -476,9 +477,7 @@ class DataLineChartState extends State<DataLineChart> {
       LineChartBarData(
         spots: spots,
         isCurved: true,
-        colors: [
-         decideChartLinesColor(chosenIndex)
-        ],
+        colors: [decideChartLinesColor(chosenIndex)],
         barWidth: 3,
         isStrokeCapRound: true,
         dotData: FlDotData(

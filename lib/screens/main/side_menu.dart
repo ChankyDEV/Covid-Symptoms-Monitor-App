@@ -1,13 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
+import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
+import 'package:symptoms_monitor/inject.dart';
+import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';
 
-class SideMenu extends StatelessWidget {
+class SideMenu extends StatefulWidget {
+  @override
+  _SideMenuState createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  Profile profile;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (Hive.isBoxOpen('User')) {
+      profile = Hive.box('User').values.first as Profile;
+    } else {
+      Hive.openBox('User');
+      profile = Hive.box('User').values.first as Profile;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool hasPhoto = false;
-
     return Container(
       color: Color(cBlueDark),
       child: Padding(
@@ -31,12 +52,37 @@ class SideMenu extends StatelessWidget {
                           color: Color(cBlueLight),
                           width: 3,
                         ),
-                        color:
-                            hasPhoto ? Colors.transparent : Color(cBlueLight),
+                        color: profile.hasImage
+                            ? Colors.transparent
+                            : Color(cBlueLight),
                         shape: BoxShape.circle),
-                    child: hasPhoto
-                        ? Image.network(
-                            'https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/avat-01-512.png')
+                    child: profile.hasImage
+                        ? FutureBuilder(
+                            future: getIt<IProfileRepository>()
+                                .getPhotoFromFirebase(
+                                    profile.name, profile.uid),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data;
+                                return data.fold((l) {
+                                  return SizedBox();
+                                }, (r) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: NetworkImage(r),
+                                        )),
+                                  );
+                                });
+                              } else {
+                                return CircularProgressIndicator(
+                                  backgroundColor: Colors.black,
+                                );
+                              }
+                            },
+                          )
                         : IconButton(
                             onPressed: () {
                               print('Add photo');
