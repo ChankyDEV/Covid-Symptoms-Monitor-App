@@ -1,13 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:symptoms_monitor/blocs/logged_in/logged_in_cubit.dart';
+import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
+import 'package:symptoms_monitor/inject.dart';
+import 'package:symptoms_monitor/models/profile/gender_enum.dart';
+import 'package:symptoms_monitor/models/profile/profile.dart';
 import 'package:symptoms_monitor/screens/const.dart';
 
-class SideMenu extends StatelessWidget {
+class SideMenu extends StatefulWidget {
+  @override
+  _SideMenuState createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  Profile profile;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (Hive.isBoxOpen('User')) {
+      profile = Hive.box('User').values.first as Profile;
+    } else {
+      Hive.openBox('User');
+      profile = Hive.box('User').values.first as Profile;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool hasPhoto = false;
-
     return Container(
       color: Color(cBlueDark),
       child: Padding(
@@ -24,30 +47,51 @@ class SideMenu extends StatelessWidget {
                     width: 24.0,
                   ),
                   Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Color(cBlueLight),
-                          width: 3,
-                        ),
-                        color:
-                            hasPhoto ? Colors.transparent : Color(cBlueLight),
-                        shape: BoxShape.circle),
-                    child: hasPhoto
-                        ? Image.network(
-                            'https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/avat-01-512.png')
-                        : IconButton(
-                            onPressed: () {
-                              print('Add photo');
-                            },
-                            iconSize: 36,
-                            icon: Icon(
-                              Icons.add_a_photo,
-                              color: Colors.white,
-                            ),
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(cBlueLight),
+                            width: 3,
                           ),
-                  )
+                          color: profile.hasImage
+                              ? Colors.transparent
+                              : Color(cBlueLight),
+                          shape: BoxShape.circle),
+                      child: profile.hasImage
+                          ? FutureBuilder(
+                              future: getIt<IProfileRepository>()
+                                  .getPhotoFromFirebase(
+                                      profile.name, profile.uid),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var data = snapshot.data;
+                                  return data.fold((l) {
+                                    return SizedBox();
+                                  }, (r) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(r),
+                                          )),
+                                    );
+                                  });
+                                } else {
+                                  return CircularProgressIndicator(
+                                    backgroundColor: Colors.black,
+                                  );
+                                }
+                              },
+                            )
+                          : Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(shape: BoxShape.circle),
+                              child: SvgPicture.asset(profile.gender == 'female'
+                                  ? 'assets/images/dos.svg'
+                                  : 'assets/images/uno.svg'),
+                            ))
                 ],
               ),
             ),
@@ -105,6 +149,39 @@ class SideMenu extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget getImage(Profile profile) {
+    Gender gender;
+
+    Gender getGender(dynamic data) {
+      data.fold((failure) {
+        return Gender.none;
+      }, (r) {
+        var profiles = r as List<Profile>;
+        return profiles
+            .where((element) => element.name == profile.name)
+            .first
+            .gender;
+      });
+    }
+
+    return FutureBuilder(
+      future: getIt<IProfileRepository>().getProfiles(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          gender = getGender(snapshot.data);
+          Container(
+            child: null,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
     );
   }
 }

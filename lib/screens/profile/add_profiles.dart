@@ -19,7 +19,7 @@ class AddProfiles extends StatelessWidget {
           showError(context, state.errorText);
         } else {
           if (state.canGo) {
-            Navigator.of(context).pushReplacementNamed('/main');
+            Navigator.of(context).pushReplacementNamed('/profile_selection');
           }
         }
       },

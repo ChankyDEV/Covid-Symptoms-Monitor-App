@@ -87,7 +87,7 @@ class _ProfileSelectionState extends State<ProfileSelection> {
                   profiles.length,
                   (index) => GestureDetector(
                     onTap: () {
-                      Hive.box('User').put('current',profiles[index]);
+                      Hive.box('User').put('current', profiles[index]);
                       Navigator.pushNamed(context, "/main");
                     },
                     child: Column(

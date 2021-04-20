@@ -10,12 +10,11 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
   final IMeasurementRepository repository;
   StreamSubscription _streamSubscription;
 
-
   FrontScreenCubit({@required this.repository})
       : super(FrontScreenState.initial(
           chosenStatistic: List<bool>.filled(3, false),
           chosenIndex: 0,
-          firstFetch : false,
+          firstFetch: false,
           isButtonClicked: false,
           title: 'START',
           isDataDownloaded: false,
@@ -100,13 +99,13 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
       await Future.delayed(Duration(milliseconds: 100));
       title += acquisition[i];
       emit(state.copyWith(
-              firstFetch : true,
+        firstFetch: true,
         title: title,
       ));
     }
     if (measurementInput != null) {
       showData(measurement: measurementInput);
-    } 
+    }
   }
 
   void showData({Measurement measurement}) async {
@@ -165,8 +164,8 @@ class FrontScreenCubit extends Cubit<FrontScreenState> {
       } else {
         emit(
           state.copyWith(
-            lastMeasurements: [],
-            lastMeasurementsHadError: true,
+            lastMeasurements: [Measurement.empty()],
+            lastMeasurementsHadError: false,
             lastMeasurementsLoading: false,
           ),
         );
