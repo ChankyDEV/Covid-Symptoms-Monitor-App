@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:symptoms_monitor/domain/profiles/i_profile_repository.dart';
-import 'package:symptoms_monitor/models/profile/gender_enum.dart';
 import 'package:symptoms_monitor/models/profile/profile.dart';
 part 'add_profile_state.dart';
 part 'add_profile_cubit.freezed.dart';
@@ -29,13 +28,13 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     if (state.profileName.isNotEmpty) {
       var profiles = state.profiles;
 
-      Gender gender;
+      String gender;
       if (state.genderIndex == 0) {
-        gender = Gender.male;
+        gender = 'male';
       } else if (state.genderIndex == 1) {
-        gender = Gender.female;
+        gender = 'female';
       } else {
-        gender = Gender.none;
+        gender = 'none';
       }
       var name =
           state.profileName.replaceAll(new RegExp(r"\s+"), "").toUpperCase();

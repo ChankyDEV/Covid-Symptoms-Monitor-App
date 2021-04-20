@@ -19,7 +19,7 @@ class ProfileAdapter extends TypeAdapter<Profile> {
     return Profile(
       name: fields[0] as String,
       hasImage: fields[1] as bool,
-      gender: fields[2] as Gender,
+      gender: fields[2] as String,
       avatar: fields[3] as PickedFile,
       uid: fields[4] as String,
     );

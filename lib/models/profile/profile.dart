@@ -14,7 +14,7 @@ class Profile extends Equatable {
   @HiveField(1)
   final bool hasImage;
   @HiveField(2)
-  final Gender gender;
+  final String gender;
   @HiveField(3)
   final PickedFile avatar;
   @HiveField(4)
@@ -38,14 +38,12 @@ class Profile extends Equatable {
       hasImage: false,
       name: '',
       uid: '',
-      gender: Gender.none,
+      gender: 'none',
     );
   }
 
   bool isEmpty() {
-    if (this.hasImage == false &&
-        this.name == '' &&
-        this.gender == Gender.none) {
+    if (this.hasImage == false && this.name == '' && this.gender == 'none') {
       return true;
     } else {
       return false;
@@ -91,16 +89,25 @@ class Profile extends Equatable {
       Profile.fromMap(json.decode(source));
 }
 
-Gender _stringToGender(String input) {
+String _stringToGender(String input) {
   switch (input) {
+    case 'Gender.male':
+      return 'male';
+      break;
+    case 'Gender.female':
+      return 'female';
+      break;
+    case 'Gender.none':
+      return 'none';
+      break;
     case 'male':
-      return Gender.male;
+      return 'male';
       break;
     case 'female':
-      return Gender.female;
+      return 'female';
       break;
     case 'none':
-      return Gender.none;
+      return 'none';
       break;
     default:
       return null;

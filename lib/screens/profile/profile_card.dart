@@ -87,13 +87,22 @@ class ProfileCard extends StatelessWidget {
 
 String _returnProperAvatar(Profile profile) {
   switch (profile.gender) {
-    case Gender.male:
+    case 'Gender.male':
       return 'man_av.png';
       break;
-    case Gender.female:
+    case 'Gender.female':
       return 'girl_av.png';
       break;
-    case Gender.none:
+    case 'Gender.none':
+      return 'none_av.png';
+      break;
+    case 'male':
+      return 'man_av.png';
+      break;
+    case 'female':
+      return 'girl_av.png';
+      break;
+    case 'none':
       return 'none_av.png';
       break;
     default:
